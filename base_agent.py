@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Optional, Any, Callable
 from datetime import datetime
+from adaptive_llm_router.llm import invoke as alr_invoke
 
 class AgentType(Enum):
     """Types of agents in the 371 Minds OS"""
@@ -86,6 +87,20 @@ class BaseAgent(ABC):
     def get_capabilities(self) -> List[AgentCapability]:
         """Return the capabilities of this agent"""
         return self.capabilities
+
+    async def llm_invoke(self, prompt: str, meta: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        A wrapper to call the Adaptive LLM Router.
+        """
+        if meta is None:
+            meta = {}
+
+        # Enrich metadata with agent and task info
+        meta["agent_name"] = self.agent_type.value
+        if self.current_task:
+            meta["task_id"] = self.current_task.id
+
+        return await alr_invoke(prompt, meta, user_id=self.agent_id)
 
     async def execute_task(self, task: Task) -> Task:
         """Execute a task and update its status"""
