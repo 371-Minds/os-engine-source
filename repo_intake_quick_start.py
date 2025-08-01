@@ -12,8 +12,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent))
 
 try:
-    from repository_intake_engine import IntelligentRoutingSystem
-    from analytics_371 import Analytics371
+    from repository_intake_engine import IntelligentRoutingSystem, Analytics371
     print("✅ All modules imported successfully")
 except ImportError as e:
     print(f"❌ Import error: {e}")
