@@ -75,6 +75,10 @@ class IntelligentRoutingSystem(BaseAgent):
             "setup_infrastructure": [
                 AgentType.DEPLOYMENT,
                 AgentType.CREDENTIAL_MANAGER
+            ],
+            "financial_analysis": [
+                AgentType.FINANCIAL,
+                AgentType.CFO
             ]
         }
 
@@ -117,6 +121,13 @@ class IntelligentRoutingSystem(BaseAgent):
 
         if any(keyword in submission_lower for keyword in ["database", "api", "credentials"]):
             required_agents.add(AgentType.CREDENTIAL_MANAGER)
+
+        if any(keyword in submission_lower for keyword in [
+            "financial", "cfo", "cash", "revenue", "expenses", "profit",
+            "p&l", "r&d", "tax", "billing", "subscription", "payment"
+        ]):
+            required_agents.add(AgentType.FINANCIAL)
+            required_agents.add(AgentType.CFO)
 
         # Default to business logic if no specific patterns found
         if not required_agents:
