@@ -332,6 +332,19 @@ class SocialPlatformOptimizer:
                 "title_max_chars": 100,
                 "description_max_chars": 5000,
                 "video_specs": {"max_duration": 43200, "max_size_gb": 256}  # 12 hours, 256GB
+            },
+            SocialPlatform.BLUESKY: {
+                "max_chars": 300,
+                "max_hashtags": 10,
+                "image_specs": {"max_width": 2000, "max_height": 2000, "formats": ["jpg", "png", "gif"]},
+            },
+            SocialPlatform.SUBSTACK: {
+                "max_chars": 50000, # Effectively unlimited
+                "max_hashtags": 5,
+            },
+            SocialPlatform.MEDIUM: {
+                "max_chars": 50000, # Effectively unlimited
+                "max_hashtags": 5,
             }
         }
 
