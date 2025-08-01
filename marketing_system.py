@@ -229,6 +229,9 @@ class SocialPlatform(Enum):
     TIKTOK = "tiktok"
     THREADS = "threads"
     MASTODON = "mastodon"
+    BLUESKY = "bluesky"
+    SUBSTACK = "substack"
+    MEDIUM = "medium"
 
 class PostType(Enum):
     TEXT = "text"
