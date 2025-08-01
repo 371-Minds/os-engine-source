@@ -21,6 +21,10 @@ class AgentType(Enum):
     BUSINESS_LOGIC = "business_logic"
     DEPLOYMENT = "deployment"
     CREDENTIAL_MANAGER = "credential_manager"
+    MARKETING_AUTOMATION = "marketing_automation"
+    REPOSITORY_INTAKE = "repository_intake"
+    QA_AUTOMATION = "qa_automation"
+    TECH_STACK_SPECIALIST = "tech_stack_specialist"
 
 class TaskStatus(Enum):
     """Status of tasks in the system"""
