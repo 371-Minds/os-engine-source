@@ -32,7 +32,10 @@ class PlatformType(Enum):
     INSTAGRAM = "instagram"
     YOUTUBE = "youtube"
     TIKTOK = "tiktok"
-
+    BLUESKY = "bluesky"
+    SUBSTACK = "substack"
+    MEDIUM = "medium"
+    
 @dataclass
 class ContentRequest:
     content_type: ContentType
