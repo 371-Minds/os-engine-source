@@ -1,4 +1,3 @@
-
 """
 371 Minds Operating System - Intelligent Routing System
 """
@@ -152,6 +151,9 @@ class IntelligentRoutingSystem(BaseAgent):
         if any(keyword in submission_lower for keyword in ["database", "api", "credentials"]):
             required_agents.add(AgentType.CREDENTIAL_MANAGER)
 
+        if any(keyword in submission_lower for keyword in ["financial", "revenue", "expenses"]):
+            required_agents.add(AgentType.FINANCIAL)
+
         # Default to business logic if no specific patterns found
         if not required_agents:
             required_agents.add(AgentType.BUSINESS_LOGIC)
@@ -172,7 +174,8 @@ class IntelligentRoutingSystem(BaseAgent):
             AgentType.MARKETING_ASSET: 180,  # 3 minutes
             AgentType.BUSINESS_LOGIC: 120,   # 2 minutes
             AgentType.DEPLOYMENT: 240,       # 4 minutes
-            AgentType.CREDENTIAL_MANAGER: 60 # 1 minute
+            AgentType.CREDENTIAL_MANAGER: 60, # 1 minute
+            AgentType.FINANCIAL: 180 # 3 minutes
         }
 
         if len(agents) <= 2:
