@@ -26,6 +26,8 @@ class AgentType(Enum):
     QA_AUTOMATION = "qa_automation"
     TECH_STACK_SPECIALIST = "tech_stack_specialist"
     CEO = "ceo"
+    CTO = "cto"
+    CMO = "cmo"
 
 class TaskStatus(Enum):
     """Status of tasks in the system"""
