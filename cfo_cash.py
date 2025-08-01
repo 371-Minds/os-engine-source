@@ -3,6 +3,7 @@
 """
 
 from base_agent import BaseAgent, AgentType, Task, AgentCapability
+from financial_system import FinancialAgent
 
 class CfoCashAgent(BaseAgent):
     """
@@ -36,11 +37,11 @@ class CfoCashAgent(BaseAgent):
             AgentCapability(name="investment_strategy", description="Develop and manage investment strategy."),
         ]
         super().__init__(agent_id, AgentType.CFO, capabilities)
+        self.financial_agent = FinancialAgent()
 
     async def process_task(self, task: Task) -> dict:
-        """Process a financial task."""
-        # In a real implementation, this would involve complex financial analysis and reporting.
-        return {"status": "success", "message": f"Financial task '{task.description}' is being processed."}
+        """Process a financial task by delegating to the FinancialAgent."""
+        return await self.financial_agent.process_task(task)
 
     async def health_check(self) -> bool:
         """Check if the agent is healthy and ready to process tasks."""

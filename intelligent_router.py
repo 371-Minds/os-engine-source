@@ -51,32 +51,66 @@ class IntelligentRoutingSystem(BaseAgent):
         self.available_agents: Dict[AgentType, List[BaseAgent]] = {}
         self.task_queue: List[Task] = []
         self.active_tasks: Dict[str, Task] = {}
-        self.routing_rules: Dict[str, List[AgentType]] = self._initialize_routing_rules()
+        self.routing_rules: List[Dict[str, Any]] = self._initialize_routing_rules()
+        self._initialize_financial_routing_rules()
 
-    def _initialize_routing_rules(self) -> Dict[str, List[AgentType]]:
+    def _initialize_routing_rules(self) -> List[Dict[str, Any]]:
         """Initialize routing rules based on common request patterns"""
-        return {
-            "deploy_application": [
-                AgentType.CODE_GENERATION,
-                AgentType.DEPLOYMENT,
-                AgentType.CREDENTIAL_MANAGER  
-            ],
-            "create_marketing_campaign": [
-                AgentType.MARKETING_ASSET,
-                AgentType.BUSINESS_LOGIC
-            ],
-            "build_saas_product": [
-                AgentType.CODE_GENERATION,
-                AgentType.BUSINESS_LOGIC,
-                AgentType.MARKETING_ASSET,
-                AgentType.DEPLOYMENT,
-                AgentType.CREDENTIAL_MANAGER
-            ],
-            "setup_infrastructure": [
-                AgentType.DEPLOYMENT,
-                AgentType.CREDENTIAL_MANAGER
-            ]
-        }
+        return [
+            {
+                "pattern": r'\b(deploy|launch|release)\s+application\b',
+                "agents": [AgentType.CODE_GENERATION, AgentType.DEPLOYMENT, AgentType.CREDENTIAL_MANAGER]
+            },
+            {
+                "pattern": r'\b(create|generate)\s+marketing\s+campaign\b',
+                "agents": [AgentType.MARKETING_ASSET, AgentType.BUSINESS_LOGIC]
+            },
+            {
+                "pattern": r'\b(build|develop)\s+saas\s+product\b',
+                "agents": [
+                    AgentType.CODE_GENERATION,
+                    AgentType.BUSINESS_LOGIC,
+                    AgentType.MARKETING_ASSET,
+                    AgentType.DEPLOYMENT,
+                    AgentType.CREDENTIAL_MANAGER
+                ]
+            },
+            {
+                "pattern": r'\b(setup|configure)\s+infrastructure\b',
+                "agents": [AgentType.DEPLOYMENT, AgentType.CREDENTIAL_MANAGER]
+            }
+        ]
+
+    def _initialize_financial_routing_rules(self):
+        self.routing_rules.extend([
+            {
+                "pattern": r'\b(?:track|analyze|report)\s+(?:expenses|revenue|profit)\b',
+                "agent": AgentType.FINANCIAL,
+                "handler": self._build_financial_analysis_request
+            },
+            {
+                "pattern": r'\b(?:r&d|research|development)\s+(?:expenses|deductions|tax)\b',
+                "agent": AgentType.FINANCIAL,
+                "handler": self._build_rd_tax_request
+            },
+            {
+                "pattern": r'\b(?:subscription|billing|payment)\s+(?:analysis|report|sync)\b',
+                "agent": AgentType.FINANCIAL,
+                "handler": self._build_billing_request
+            }
+        ])
+
+    def _build_financial_analysis_request(self, match, user_input):
+        # Placeholder for a real implementation
+        return {}
+
+    def _build_rd_tax_request(self, match, user_input):
+        # Placeholder for a real implementation
+        return {}
+
+    def _build_billing_request(self, match, user_input):
+        # Placeholder for a real implementation
+        return {}
 
     def register_agent(self, agent: BaseAgent):
         """Register an agent with the routing system"""
