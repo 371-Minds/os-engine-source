@@ -10,6 +10,10 @@ from base_agent import BaseAgent, AgentType, Task, TaskStatus, AgentCapability
 from credential_warehouse_agent import SecureCredentialWarehouse
 
 # Placeholder for external integrations
+class CreemioIntegration:
+    def __init__(self):
+        pass
+
 class StripeIntegration:
     def __init__(self):
         pass
@@ -126,6 +130,7 @@ class RDTaxOptimizer:
 class BillingOrchestrator:
     def __init__(self):
         self.platforms = {
+            'creemio': self._init_creemio(),
             'stripe': self._init_stripe(),
             'lemonsqueezy': self._init_lemonsqueezy(),
             'polar': self._init_polar(),
@@ -133,6 +138,7 @@ class BillingOrchestrator:
             'tremendous': self._init_tremendous()
         }
 
+    def _init_creemio(self): return CreemioIntegration()
     def _init_stripe(self): return StripeIntegration()
     def _init_lemonsqueezy(self): return LemonSqueezyManager()
     def _init_polar(self): return PolarSubscriptionManager()
@@ -161,6 +167,19 @@ class BillingOrchestrator:
             description=f"New subscription: {data.get('plan_name', 'default_plan')}",
             tax_treatment="Accrual Recognition",
             source_system="Stripe"
+        )
+
+    async def _handle_creemio_subscription_created(self, data: Dict) -> PLEntry:
+        """Process new Creem.io subscription for P&L tracking"""
+        return PLEntry(
+            entry_id=f"creemio_{data.get('subscription_id', 'sub_456')}",
+            category="Revenue",
+            subcategory="SaaS Subscriptions",
+            amount=data.get('amount', 0) / 100,  # Convert from cents
+            date=datetime.fromtimestamp(data.get('created', time.time())),
+            description=f"New subscription: {data.get('plan_name', 'default_plan')}",
+            tax_treatment="Accrual Recognition",
+            source_system="Creem.io"
         )
 
     async def _record_pl_entry(self, pl_entry: PLEntry):
