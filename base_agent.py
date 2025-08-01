@@ -28,6 +28,7 @@ class AgentType(Enum):
     CEO = "ceo"
     CTO = "cto"
     CMO = "cmo"
+    CFO = "cfo"
 
 class TaskStatus(Enum):
     """Status of tasks in the system"""
