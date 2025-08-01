@@ -1,0 +1,47 @@
+[
+  {
+    "name": "openrouter",
+    "model": "gpt-4o-mini",
+    "cost_in": 0.0006,
+    "cost_out": 0.0006,
+    "max_context": 128000,
+    "latency_ms": 500,
+    "endpoint_env": "OPENROUTER_API_KEY"
+  },
+  {
+    "name": "requesty",
+    "model": "claude-3-sonnet",
+    "cost_in": 0.003,
+    "cost_out": 0.015,
+    "max_context": 200000,
+    "latency_ms": 800,
+    "endpoint_env": "REQUESTY_API_KEY"
+  },
+  {
+    "name": "openrouter",
+    "model": "mistral-7b",
+    "cost_in": 0.00025,
+    "cost_out": 0.00025,
+    "max_context": 32000,
+    "latency_ms": 300,
+    "endpoint_env": "OPENROUTER_API_KEY"
+  },
+  {
+    "name": "openrouter",
+    "model": "qwen2-72b",
+    "cost_in": 0.001,
+    "cost_out": 0.002,
+    "max_context": 64000,
+    "latency_ms": 1200,
+    "endpoint_env": "OPENROUTER_API_KEY"
+  },
+  {
+    "name": "localai",
+    "model": "phi-4-14b",
+    "cost_in": 0.0,
+    "cost_out": 0.0,
+    "max_context": 32000,
+    "latency_ms": 200,
+    "endpoint_env": "LOCALAI_API_KEY"
+  }
+]
