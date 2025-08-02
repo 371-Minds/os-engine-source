@@ -24,6 +24,7 @@ async def invoke(
     meta: Dict[str, Any],
     user_id: Optional[str] = None
 ) -> Dict[str, Any]:
+    print("DEBUG: Entering adaptive_llm_router.invoke")
     """
     The main function for the Adaptive LLM Router.
     It selects a provider, makes the LLM call, and records the usage.

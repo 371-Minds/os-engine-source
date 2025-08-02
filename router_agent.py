@@ -9,7 +9,7 @@ import logging
 import re
 import uuid
 import dataclasses
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, Any
 from dataclasses import dataclass
 from base_agent import BaseAgent, AgentType, Task, TaskStatus, AgentCapability, DeploymentRequest
 
@@ -118,6 +118,9 @@ class IntelligentRoutingSystem(BaseAgent):
                 AgentType.CREDENTIAL_MANAGER
             ])
             execution_strategy = "parallel"
+
+        if any(keyword in submission_lower for keyword in ["repository", "repo", "github.com"]):
+            required_agents.add(AgentType.REPOSITORY_INTAKE)
 
         if any(keyword in submission_lower for keyword in ["marketing", "campaign", "social media"]):
             required_agents.add(AgentType.MARKETING_ASSET)
@@ -233,8 +236,13 @@ class IntelligentRoutingSystem(BaseAgent):
             sub_task_id = f"{routing_decision.task_id}_subtask_{i+1}"
             current_payload = task_payload
 
+            # If the agent is a repository intake agent, extract the URL
+            if agent_type == AgentType.REPOSITORY_INTAKE:
+                repo_url = self._extract_repo_url(user_submission)
+                current_payload = {"repo_url": repo_url, "user_id": task_payload.get("user_id")}
+
             # If the agent is a deployment agent, build a specialized payload
-            if agent_type == AgentType.DEPLOYMENT:
+            elif agent_type == AgentType.DEPLOYMENT:
                 self.logger.info(f"Building specialized deployment request for sub-task {sub_task_id}")
                 deployment_request = self._build_deployment_request(user_submission, sub_task_id)
                 current_payload = dataclasses.asdict(deployment_request)
