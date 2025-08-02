@@ -7,7 +7,7 @@ The 371 Minds OS is a framework for building and orchestrating specialized AI ag
 The OS is built around a few core concepts:
 
 *   **Intelligent Routing System**: This is the central orchestrator of the OS. It analyzes incoming requests and routes them to the appropriate specialized agent or system. This ensures that tasks are handled by the most qualified agent, without wasting resources.
-*   **Specialized Execution Systems (Agents)**: These are individual components, or "agents," that are experts in a specific domain. Examples include a `CodeGenerationSystem`, a `MarketingAssetSystem`, and a `BusinessLogicSystem`. Each agent operates independently, allowing for parallel execution and scalability.
+*   **Specialized Execution Systems (Agents)**: These are individual components, or "agents," that are experts in a specific domain. Examples include the `RepoIntakeAgent` for analyzing code repositories and the `QAAgent` for handling question-answering tasks. Each agent operates independently, allowing for parallel execution and scalability.
 *   **Secure Credential Warehouse**: A centralized and secure vault for managing API keys, tokens, and other sensitive credentials. This allows agents to access the resources they need without exposing sensitive information in the codebase.
 *   -**Human-in-the-Loop-Alerts**: The system is designed to automate as much as possible, but it also includes checkpoints for human approval. This ensures that critical decisions are reviewed by a human before proceeding.
 
@@ -28,31 +28,40 @@ The high-level architecture is represented by the following JSON structure:
 ```json
 {
     "371_minds_os": {
-        "core_components": {
-            "intelligent_routing_system": {
-                "description": "Central orchestrator that analyzes submissions and determines system activation"
-            },
-            "specialized_execution_systems": {
-                "code_generation_system": { "purpose": "Ingests repo, applies tech stack wisdom" },
-                "marketing_asset_system": { "purpose": "Brand consistency, asset optimization" },
-                "business_logic_system": { "purpose": "PRD creation, requirement analysis" },
-                "deployment_system": { "purpose": "Infrastructure, CI/CD pipeline" }
-            },
-            "secure_credential_warehouse": {
-                "description": "CyberArk-style vault for secure credential management"
-            },
-            "human_in_the_loop_alerts": {
-                "description": "Smart notification system for decision points"
+        "user_interface": {
+            "desktop_application": {
+                "technology": "Electron.js",
+                "purpose": "Provides an IDE-like experience for interacting with the OS."
             }
         },
-        "architectural_patterns": {
-            "microservices_based": {
-                "description": "Each agent is an independent containerized service"
-            },
-            "event_driven_communication": {
-                "description": "Asynchronous message-based communication"
+        "core_orchestration": {
+            "intelligent_routing_system": {
+                "description": "Analyzes submissions and delegates tasks to specialist agents."
             }
-        }
+        },
+        "specialized_agents": {
+            "repo_intake_agent": { "purpose": "Clones and analyzes Git repositories." },
+            "qa_agent": { "purpose": "Answers questions using the Adaptive LLM Router." },
+            "code_generation_agent": { "status": "In Development" },
+            "deployment_agent": { "status": "In Development" }
+        },
+        "supporting_services": {
+            "adaptive_llm_router": {
+                "description": "Dynamically selects LLMs and manages costs."
+            },
+            "secure_credential_warehouse": {
+                "description": "Manages API keys and other secrets."
+            },
+            "analytics": {
+                "technology": "PostHog",
+                "purpose": "Tracks system performance and agent execution."
+            }
+        },
+        "architectural_patterns": [
+            "Microservices-based",
+            "Event-driven Communication",
+            "Asynchronous Task Processing"
+        ]
     }
 }
 ```
@@ -90,54 +99,109 @@ If you don't have a PostHog account, you can still run the system using a demo k
 
 ### Running the Quick Start
 
-To see the system in action, run the `quick_start.py` script:
+To see the system in action, run the `repo_intake_quick_start.py` script:
 
 ```bash
-python quick_start.py
+python repo_intake_quick_start.py
 ```
 
-This will simulate a few requests and show you how the `IntelligentRoutingSystem` processes them.
+This script demonstrates the full, unified architecture by sending a high-level task to the `IntelligentRoutingSystem`, which then delegates it to the appropriate specialist agent.
 
 ## Usage
 
-The following is a basic example of how to use the `IntelligentRoutingSystem` from the `quick_start.py` script:
+The following is a basic example of how to use the `IntelligentRoutingSystem` and a specialist agent. This example is adapted from the `repo_intake_quick_start.py` script.
 
 ```python
+import asyncio
 import os
-from repository_intake_engine import IntelligentRoutingSystem
+from router_agent import IntelligentRoutingSystem
+from repo_intake_agent import RepoIntakeAgent
 from analytics_371 import Analytics371
+from base_agent import Task, AgentType
 
-# Initialize the system
-api_key = os.getenv('POSTHOG_API_KEY', 'demo_key_12345')
-analytics = Analytics371(api_key)
-router = IntelligentRoutingSystem(posthog_client=analytics.client)
+async def main():
+    # 1. Initialize System Components
+    analytics = Analytics371(os.getenv('POSTHOG_API_KEY', 'demo_key_12345'))
+    router = IntelligentRoutingSystem()
+    repo_intake_agent = RepoIntakeAgent(analytics_client=analytics)
 
-# Create a test request
-request = "Analyze the repository at https://github.com/microsoft/vscode"
+    # 2. Register Agents with the Router
+    router.register_agent(repo_intake_agent)
 
-# Route the request
-result = router.route_request(request, user_id="test_user_1")
+    # 3. Create and Process a Task
+    # This is a high-level user request.
+    user_submission = "Please analyze the repository at https://github.com/371-minds/os-engine-source"
 
-# Print the result
-print(f"Status: {result.status}")
-print(f"Execution time: {result.execution_time:.2f}s")
-print(f"Agent: {result.agent_type}")
-if result.metadata:
-    print(f"Metadata: {result.metadata}")
+    # We create a task for the INTELLIGENT_ROUTER. Its job is to break this down.
+    initial_task = Task(
+        id="quick_start_task_001",
+        description="Top-level request to analyze a repository.",
+        agent_type=AgentType.INTELLIGENT_ROUTER,
+        payload={
+            "submission": user_submission,
+            "user_id": "quickstart_user"
+        }
+    )
+
+    # The router processes the initial task and orchestrates the required sub-tasks.
+    final_task_state = await router.execute_task(initial_task)
+
+    # 4. Display Results
+    print(f"Task execution completed with status: {final_task_state.status.value}")
+    if final_task_state.status.value == "completed":
+        print("--- Router Orchestration Summary ---")
+        print(final_task_state.result)
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
 ## Core Components
 
-### Repository Intake Engine
+The 371 Minds OS is composed of several key components that work together to automate complex tasks.
 
-The Repository Intake Engine is responsible for cloning, analyzing, and bundling Git repositories. It can detect languages, scan for security vulnerabilities, analyze code complexity, and extract dependencies.
+### Intelligent Routing System
 
-### Content & Marketing Automation System
+The `IntelligentRoutingSystem` (found in `router_agent.py`) is the brain of the OS. It acts as a central orchestrator that analyzes high-level user requests and delegates them to the appropriate specialist agents. Its key responsibilities include:
+*   **Task Analysis**: Parsing user submissions to identify the required skills and agents.
+*   **Orchestration**: Creating and managing sub-tasks for specialist agents. It can execute tasks sequentially or in parallel.
+*   **Agent Registry**: Maintaining a registry of all available agents in the system.
 
-This system turns every agent into its own "CMO" (Chief Marketing Officer). It can:
-*   Generate on-brand copy and creative content.
-*   Launch personalized email sequences and social media posts.
-*   Learn from engagement data to optimize future campaigns.
-*   Route critical decisions to a human for approval.
+### RepoIntakeAgent
+
+The `RepoIntakeAgent` (found in `repo_intake_agent.py`) is a specialist agent responsible for fetching and analyzing source code from Git repositories. Its capabilities include:
+*   Cloning public Git repositories.
+*   Analyzing repository content to determine file counts, lines of code, and programming languages.
+*   Extracting metadata such as the last commit hash.
+*   Bundling the repository content for further processing by other agents.
+
+### QAAgent
+
+The `QAAgent` (found in `qa_agent.py`) is a specialist agent designed for question-answering tasks. It leverages the `Adaptive LLM Router` to select the most appropriate language model for a given query, balancing cost, quality, and confidentiality.
 
 For more details on the specific components and their capabilities, please refer to the source files in this repository.
+
+## Adaptive LLM Router
+
+The `Adaptive LLM Router` (located in the `adaptive_llm_router` directory) is a sophisticated component for managing calls to large language models (LLMs). Instead of being tied to a single LLM provider, the router dynamically selects the best provider for a given task based on a set of policies.
+
+Key features include:
+*   **Dynamic Provider Selection**: Chooses the optimal LLM provider (e.g., OpenAI, Anthropic, a local model) based on metadata such as desired quality, confidentiality requirements, and budget constraints.
+*   **Cost Management**: Tracks token usage and cost per request, helping to manage and enforce budgets.
+*   **Centralized Usage Ledger**: Records all LLM interactions, providing a clear overview of usage and spending.
+*   **Extensible Provider Registry**: Easily add new LLM providers by defining them in the `providers.json` file.
+
+This component allows agents like the `QAAgent` to leverage LLMs without being tightly coupled to a specific implementation, making the system more flexible and cost-effective.
+
+## Desktop Application
+
+This repository includes an Electron-based desktop application that provides a rich user interface for the 371 Minds OS. It is designed to feel like a dedicated IDE for working with the agent system.
+
+The application is architected as follows:
+*   **Frontend**: An Electron.js application provides the user interface, which includes features like a text editor (`monaco-editor`) and a terminal (`xterm`).
+*   **Backend**: The core Python-based agent system is packaged into a single, standalone executable using PyInstaller.
+*   **Communication**: The Electron frontend launches the Python executable as a background process on startup. It then communicates with the backend via a local Flask web server.
+
+This setup allows for a seamless user experience, combining the power of the Python backend with a modern, web-based frontend.
+
+For detailed instructions on how to set up and run the desktop application, please refer to the **[Electron Integration Guide](electron/ELECTRON_GUIDE.md)**.
