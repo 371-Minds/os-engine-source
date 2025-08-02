@@ -1,0 +1,1611 @@
+{
+  "base_agent.py": {
+    "classes": [
+      "AgentType",
+      "TaskStatus",
+      "Task",
+      "DeploymentRequest",
+      "DeploymentContext",
+      "AgentCapability",
+      "BaseAgent"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "asyncio"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "json"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "logging"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "uuid"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "abc",
+        "names": [
+          "ABC",
+          "abstractmethod"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "dataclasses",
+        "names": [
+          "dataclass",
+          "field"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "enum",
+        "names": [
+          "Enum"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "Dict",
+          "List",
+          "Optional",
+          "Any",
+          "Callable"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "datetime",
+        "names": [
+          "datetime"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "adaptive_llm_router.llm",
+        "names": [
+          "invoke"
+        ]
+      }
+    ],
+    "exports": [
+      "AgentType",
+      "TaskStatus",
+      "Task",
+      "DeploymentRequest",
+      "DeploymentContext",
+      "AgentCapability",
+      "BaseAgent"
+    ]
+  },
+  "repo_intake_agent.py": {
+    "classes": [
+      "RepositoryContext",
+      "RepoIntakeAgent"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "os"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "time"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "subprocess"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "pathlib",
+        "names": [
+          "Path"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "Dict",
+          "List",
+          "Optional",
+          "Any"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "dataclasses",
+        "names": [
+          "dataclass",
+          "asdict"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "datetime",
+        "names": [
+          "datetime"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "base_agent",
+        "names": [
+          "BaseAgent",
+          "AgentType",
+          "Task",
+          "AgentCapability"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "analytics_371",
+        "names": [
+          "Analytics371"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "shutil"
+        ]
+      }
+    ],
+    "exports": [
+      "RepositoryContext",
+      "RepoIntakeAgent"
+    ]
+  },
+  "brokkai_client.py": {
+    "classes": [
+      "BrokkAiClient"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "json"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "Dict",
+          "Any"
+        ]
+      }
+    ],
+    "exports": [
+      "BrokkAiClient"
+    ]
+  },
+  "repo_intake_quick_start.py": {
+    "classes": [],
+    "functions": [],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "os"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "sys"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "asyncio"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "json"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "pathlib",
+        "names": [
+          "Path"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "logging"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "router_agent",
+        "names": [
+          "IntelligentRoutingSystem"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "repo_intake_agent",
+        "names": [
+          "RepoIntakeAgent"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "analytics_371",
+        "names": [
+          "Analytics371"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "base_agent",
+        "names": [
+          "Task",
+          "AgentType"
+        ]
+      }
+    ],
+    "exports": []
+  },
+  "posthog_agent.py": {
+    "classes": [
+      "Analytics371",
+      "TrackExecution"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "time"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "datetime",
+        "names": [
+          "datetime"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "Dict",
+          "Any",
+          "Optional"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "posthog"
+        ]
+      }
+    ],
+    "exports": [
+      "Analytics371",
+      "TrackExecution"
+    ]
+  },
+  "mindscript_agent.py": {
+    "classes": [
+      "ParseResult",
+      "LogicExtractorAgent"
+    ],
+    "functions": [
+      "estimate_tokens"
+    ],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "re"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "logging"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "Dict",
+          "List",
+          "Any",
+          "Tuple"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "dataclasses",
+        "names": [
+          "dataclass"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "base_agent",
+        "names": [
+          "BaseAgent",
+          "AgentType",
+          "Task",
+          "TaskStatus",
+          "AgentCapability"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "brokkai_client",
+        "names": [
+          "BrokkAiClient"
+        ]
+      }
+    ],
+    "exports": [
+      "estimate_tokens",
+      "ParseResult",
+      "LogicExtractorAgent"
+    ]
+  },
+  "cfo_cash.py": {
+    "classes": [
+      "CfoCashAgent"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "from_import",
+        "module": "base_agent",
+        "names": [
+          "BaseAgent",
+          "AgentType",
+          "Task",
+          "AgentCapability"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "financial_system",
+        "names": [
+          "FinancialAgent"
+        ]
+      }
+    ],
+    "exports": [
+      "CfoCashAgent"
+    ]
+  },
+  "financial_system.py": {
+    "classes": [
+      "CreemioIntegration",
+      "StripeIntegration",
+      "MercuryBankingIntegration",
+      "RelayBankingIntegration",
+      "PolarSubscriptionManager",
+      "LemonSqueezyManager",
+      "ThriveCartIntegration",
+      "TremendousIntegration",
+      "MercuryAPI",
+      "RelayAPI",
+      "CryptoWalletManager",
+      "PLEntry",
+      "RDExpenseEntry",
+      "RDTaxOptimizer",
+      "BillingOrchestrator",
+      "BankingIntegration",
+      "FinancialAgent"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "from_import",
+        "module": "dataclasses",
+        "names": [
+          "dataclass",
+          "field"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "Dict",
+          "List",
+          "Optional",
+          "Any"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "datetime",
+        "names": [
+          "datetime"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "time"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "posthog"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "base_agent",
+        "names": [
+          "BaseAgent",
+          "AgentType",
+          "Task",
+          "TaskStatus",
+          "AgentCapability"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "credential_warehouse_agent",
+        "names": [
+          "SecureCredentialWarehouse"
+        ]
+      }
+    ],
+    "exports": [
+      "CreemioIntegration",
+      "StripeIntegration",
+      "MercuryBankingIntegration",
+      "RelayBankingIntegration",
+      "PolarSubscriptionManager",
+      "LemonSqueezyManager",
+      "ThriveCartIntegration",
+      "TremendousIntegration",
+      "MercuryAPI",
+      "RelayAPI",
+      "CryptoWalletManager",
+      "PLEntry",
+      "RDExpenseEntry",
+      "RDTaxOptimizer",
+      "BillingOrchestrator",
+      "BankingIntegration",
+      "FinancialAgent"
+    ]
+  },
+  "integration_example.py": {
+    "classes": [],
+    "functions": [],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "asyncio"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "os"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "json"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "unittest.mock",
+        "names": [
+          "MagicMock",
+          "AsyncMock",
+          "patch"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "dotenv",
+        "names": [
+          "load_dotenv"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "qa_agent",
+        "names": [
+          "QAAgent"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "base_agent",
+        "names": [
+          "Task",
+          "AgentType"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "adaptive_llm_router.usage_ledger",
+        "names": [
+          "usage_ledger"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "logging"
+        ]
+      }
+    ],
+    "exports": []
+  },
+  "router_agent.py": {
+    "classes": [
+      "RoutingDecision",
+      "IntelligentRoutingSystem"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "asyncio"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "json"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "logging"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "re"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "uuid"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "dataclasses"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "Dict",
+          "List",
+          "Optional",
+          "Set",
+          "Any"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "dataclasses",
+        "names": [
+          "dataclass"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "base_agent",
+        "names": [
+          "BaseAgent",
+          "AgentType",
+          "Task",
+          "TaskStatus",
+          "AgentCapability",
+          "DeploymentRequest"
+        ]
+      }
+    ],
+    "exports": [
+      "RoutingDecision",
+      "IntelligentRoutingSystem"
+    ]
+  },
+  "deployment_system.py": {
+    "classes": [
+      "DeploymentAgent"
+    ],
+    "functions": [
+      "blocking_provision",
+      "get_ip",
+      "blocking_ecs_deploy",
+      "get_ip",
+      "blocking_dns_config"
+    ],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "os"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "time"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "subprocess"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "logging"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "asyncio"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "tempfile"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "Optional",
+          "Dict",
+          "Any"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "base_agent",
+        "names": [
+          "BaseAgent",
+          "AgentType",
+          "Task",
+          "TaskStatus",
+          "DeploymentRequest",
+          "DeploymentContext",
+          "AgentCapability"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "credential_warehouse_agent",
+        "names": [
+          "SecureCredentialWarehouse"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "posthog"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "digitalocean",
+        "names": [
+          "Manager",
+          "Droplet"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "digitalocean",
+        "names": [
+          "Manager"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "digitalocean",
+        "names": [
+          "Manager"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "boto3"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "CloudFlare"
+        ]
+      }
+    ],
+    "exports": [
+      "DeploymentAgent",
+      "blocking_provision",
+      "get_ip",
+      "blocking_ecs_deploy",
+      "get_ip",
+      "blocking_dns_config"
+    ]
+  },
+  "credential_warehouse_agent.py": {
+    "classes": [
+      "CredentialEntry",
+      "AccessLog",
+      "SecureCredentialWarehouse"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "asyncio"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "json"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "logging"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "hashlib"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "secrets"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "time"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "datetime",
+        "names": [
+          "datetime",
+          "timedelta"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "Dict",
+          "List",
+          "Optional",
+          "Any"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "dataclasses",
+        "names": [
+          "dataclass",
+          "field"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "cryptography.fernet",
+        "names": [
+          "Fernet"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "cryptography.hazmat.primitives",
+        "names": [
+          "hashes"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "cryptography.hazmat.primitives.kdf.pbkdf2",
+        "names": [
+          "PBKDF2HMAC"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "base64"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "os"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "base_agent",
+        "names": [
+          "BaseAgent",
+          "AgentType",
+          "Task",
+          "TaskStatus",
+          "AgentCapability"
+        ]
+      }
+    ],
+    "exports": [
+      "CredentialEntry",
+      "AccessLog",
+      "SecureCredentialWarehouse"
+    ]
+  },
+  "sys_architecture.py": {
+    "classes": [],
+    "functions": [],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "json"
+        ]
+      }
+    ],
+    "exports": []
+  },
+  "qa_agent.py": {
+    "classes": [
+      "QAAgent"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "Dict",
+          "Any"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "base_agent",
+        "names": [
+          "BaseAgent",
+          "AgentType",
+          "Task",
+          "AgentCapability"
+        ]
+      }
+    ],
+    "exports": [
+      "QAAgent"
+    ]
+  },
+  "marketing_asst_agent.py": {
+    "classes": [
+      "ContentType",
+      "PlatformType",
+      "ContentRequest",
+      "GeneratedContent",
+      "AIContentCreator",
+      "TemplateEngine",
+      "ContentOptimizer",
+      "ContentGenerationEngine",
+      "SocialPlatform",
+      "PostType",
+      "PostStatus",
+      "MediaAsset",
+      "SocialPost",
+      "PlatformSettings",
+      "EngagementMetrics",
+      "SocialPlatformOptimizer",
+      "ContentFormatter",
+      "PostScheduler",
+      "MultiPlatformPublisher",
+      "EngagementMonitor",
+      "SocialMediaSystem",
+      "EmailType",
+      "SegmentType",
+      "EmailContact",
+      "EmailTemplate",
+      "EmailCampaign",
+      "EmailMetrics",
+      "SegmentationEngine",
+      "PersonalizationEngine",
+      "ABTestManager",
+      "DeliveryEngine",
+      "WorkflowEngine",
+      "EmailMarketingSystem",
+      "MarketingAutomationAgent"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "from_import",
+        "module": "base_agent",
+        "names": [
+          "BaseAgent",
+          "AgentType",
+          "Task",
+          "TaskStatus",
+          "AgentCapability"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "enum",
+        "names": [
+          "Enum"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "dataclasses",
+        "names": [
+          "dataclass",
+          "field"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "Dict",
+          "List",
+          "Optional",
+          "Any",
+          "Callable"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "asyncio"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "datetime",
+        "names": [
+          "datetime",
+          "timedelta"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "json"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "re"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "random"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "hashlib"
+        ]
+      }
+    ],
+    "exports": [
+      "ContentType",
+      "PlatformType",
+      "ContentRequest",
+      "GeneratedContent",
+      "AIContentCreator",
+      "TemplateEngine",
+      "ContentOptimizer",
+      "ContentGenerationEngine",
+      "SocialPlatform",
+      "PostType",
+      "PostStatus",
+      "MediaAsset",
+      "SocialPost",
+      "PlatformSettings",
+      "EngagementMetrics",
+      "SocialPlatformOptimizer",
+      "ContentFormatter",
+      "PostScheduler",
+      "MultiPlatformPublisher",
+      "EngagementMonitor",
+      "SocialMediaSystem",
+      "EmailType",
+      "SegmentType",
+      "EmailContact",
+      "EmailTemplate",
+      "EmailCampaign",
+      "EmailMetrics",
+      "SegmentationEngine",
+      "PersonalizationEngine",
+      "ABTestManager",
+      "DeliveryEngine",
+      "WorkflowEngine",
+      "EmailMarketingSystem",
+      "MarketingAutomationAgent"
+    ]
+  },
+  "cto_alex.py": {
+    "classes": [
+      "CtoAlexAgent"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "from_import",
+        "module": "base_agent",
+        "names": [
+          "BaseAgent",
+          "AgentType",
+          "Task",
+          "AgentCapability"
+        ]
+      }
+    ],
+    "exports": [
+      "CtoAlexAgent"
+    ]
+  },
+  "analytics_371.py": {
+    "classes": [
+      "Analytics371",
+      "TrackExecution",
+      "Analytics371"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "time"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "datetime",
+        "names": [
+          "datetime"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "Dict",
+          "Optional",
+          "Any"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "posthog"
+        ]
+      }
+    ],
+    "exports": [
+      "Analytics371",
+      "TrackExecution",
+      "Analytics371"
+    ]
+  },
+  "chart_script.py": {
+    "classes": [],
+    "functions": [],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "plotly.graph_objects"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "plotly.express"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "numpy"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "math"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "json"
+        ]
+      }
+    ],
+    "exports": []
+  },
+  "clo_sage.py": {
+    "classes": [
+      "CloSageAgent"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "from_import",
+        "module": "base_agent",
+        "names": [
+          "BaseAgent",
+          "AgentType",
+          "Task",
+          "AgentCapability"
+        ]
+      }
+    ],
+    "exports": [
+      "CloSageAgent"
+    ]
+  },
+  "cmo_anova.py": {
+    "classes": [
+      "CmoAnovaAgent"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "from_import",
+        "module": "base_agent",
+        "names": [
+          "BaseAgent",
+          "AgentType",
+          "Task",
+          "AgentCapability"
+        ]
+      }
+    ],
+    "exports": [
+      "CmoAnovaAgent"
+    ]
+  },
+  "ceo_mimi.py": {
+    "classes": [
+      "CeoMimiAgent"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "from_import",
+        "module": "base_agent",
+        "names": [
+          "BaseAgent",
+          "AgentType",
+          "Task",
+          "AgentCapability"
+        ]
+      }
+    ],
+    "exports": [
+      "CeoMimiAgent"
+    ]
+  },
+  "electron/server.py": {
+    "classes": [],
+    "functions": [
+      "execute_task",
+      "health_check"
+    ],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "os"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "sys"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "asyncio"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "json"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "pathlib",
+        "names": [
+          "Path"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "flask",
+        "names": [
+          "Flask",
+          "request",
+          "jsonify"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "werkzeug.exceptions",
+        "names": [
+          "BadRequest"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "router_agent",
+        "names": [
+          "IntelligentRoutingSystem"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "repo_intake_agent",
+        "names": [
+          "RepoIntakeAgent"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "analytics_371",
+        "names": [
+          "Analytics371"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "base_agent",
+        "names": [
+          "Task",
+          "AgentType"
+        ]
+      }
+    ],
+    "exports": [
+      "execute_task",
+      "health_check"
+    ]
+  },
+  "adaptive_llm_router/data_models.py": {
+    "classes": [
+      "LLMProvider",
+      "LLMUsage",
+      "Settings"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "from_import",
+        "module": "pydantic",
+        "names": [
+          "BaseModel",
+          "Field"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "Optional",
+          "Union"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "datetime",
+        "names": [
+          "datetime"
+        ]
+      }
+    ],
+    "exports": [
+      "LLMProvider",
+      "LLMUsage",
+      "Settings"
+    ]
+  },
+  "adaptive_llm_router/usage_ledger.py": {
+    "classes": [
+      "UsageLedger"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "json"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "pathlib",
+        "names": [
+          "Path"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "List",
+          "Optional"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "datetime",
+        "names": [
+          "datetime"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "posthog"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "data_models",
+        "names": [
+          "LLMUsage"
+        ]
+      }
+    ],
+    "exports": [
+      "UsageLedger"
+    ]
+  },
+  "adaptive_llm_router/budget_guard.py": {
+    "classes": [
+      "BudgetExceededError",
+      "BudgetManager"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "from_import",
+        "module": "config",
+        "names": [
+          "MONTHLY_BUDGET_CAP"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "usage_ledger",
+        "names": [
+          "UsageLedger",
+          "usage_ledger"
+        ]
+      }
+    ],
+    "exports": [
+      "BudgetExceededError",
+      "BudgetManager"
+    ]
+  },
+  "adaptive_llm_router/config.py": {
+    "classes": [],
+    "functions": [],
+    "imports": [],
+    "exports": []
+  },
+  "adaptive_llm_router/provider_registry.py": {
+    "classes": [
+      "ProviderRegistry"
+    ],
+    "functions": [],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "json"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "pathlib",
+        "names": [
+          "Path"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "List",
+          "Optional"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "data_models",
+        "names": [
+          "LLMProvider"
+        ]
+      }
+    ],
+    "exports": [
+      "ProviderRegistry"
+    ]
+  },
+  "adaptive_llm_router/policy_engine.py": {
+    "classes": [],
+    "functions": [
+      "select_provider"
+    ],
+    "imports": [
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "Dict",
+          "Any"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "budget_guard",
+        "names": [
+          "budget_manager"
+        ]
+      }
+    ],
+    "exports": [
+      "select_provider"
+    ]
+  },
+  "adaptive_llm_router/llm.py": {
+    "classes": [],
+    "functions": [
+      "estimate_tokens"
+    ],
+    "imports": [
+      {
+        "type": "import",
+        "modules": [
+          "litellm"
+        ]
+      },
+      {
+        "type": "import",
+        "modules": [
+          "tiktoken"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "typing",
+        "names": [
+          "Dict",
+          "Any",
+          "Optional"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "policy_engine",
+        "names": [
+          "select_provider"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "provider_registry",
+        "names": [
+          "provider_registry"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "usage_ledger",
+        "names": [
+          "usage_ledger"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "budget_guard",
+        "names": [
+          "budget_manager",
+          "BudgetExceededError"
+        ]
+      },
+      {
+        "type": "from_import",
+        "module": "data_models",
+        "names": [
+          "LLMUsage"
+        ]
+      }
+    ],
+    "exports": [
+      "estimate_tokens"
+    ]
+  }
+}

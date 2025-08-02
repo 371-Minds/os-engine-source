@@ -29,21 +29,9 @@ class OSEngineTranspiler:
         """Create the output directory structure"""
         if self.output_dir.exists():
             shutil.rmtree(self.output_dir)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
             
-        # Create the folder structure we defined
-        folders = [
-            "agents",
-            "core", 
-            "data",
-            "api",
-            "utils",
-            "types"
-        ]
-        
-        for folder in folders:
-            (self.output_dir / folder).mkdir(parents=True, exist_ok=True)
-            
-        print(f"✅ Created output structure in {self.output_dir}")
+        print(f"✅ Cleaned and created output directory {self.output_dir}")
 
     def transpile_python_file(self, py_file: Path) -> Dict[str, Any]:
         """Transpile a single Python file to TypeScript"""
@@ -174,23 +162,6 @@ export function {node.name}({args_str}): any {{
                 'names': [alias.name for alias in node.names]
             }
 
-    def determine_output_folder(self, py_file: Path) -> str:
-        """Determine which output folder based on filename prefix"""
-        name = py_file.stem
-        
-        if name.startswith('core_'):
-            return 'core'
-        elif name.startswith('agent_'):
-            return 'agents'
-        elif name.startswith('data_'):
-            return 'data'
-        elif name.startswith('api_'):
-            return 'api'
-        elif name.startswith('util_'):
-            return 'utils'
-        else:
-            return 'core'  # Default fallback
-
     def create_package_json(self):
         """Create package.json for the transpiled engine"""
         package_json = {
@@ -224,19 +195,11 @@ export function {node.name}({args_str}): any {{
 
 """
         
-        # Group exports by folder
-        for folder in ['core', 'agents', 'data', 'api', 'utils']:
-            folder_exports = []
-            for file_name, metadata in all_metadata.items():
-                if self.determine_output_folder(Path(file_name)) == folder:
-                    folder_exports.extend(metadata['exports'])
-            
-            if folder_exports:
-                index_content += f"// {folder.title()} exports\n"
-                for export in folder_exports:
-                    ts_file = file_name.replace('.py', '')
-                    index_content += f"export {{ {export} }} from './{folder}/{ts_file}';\n"
-                index_content += "\n"
+        for file_path_str, metadata in all_metadata.items():
+            file_path = Path(file_path_str)
+            ts_file_path = file_path.relative_to(self.source_dir).with_suffix('.js')
+            for export_name in metadata['exports']:
+                index_content += f"export {{ {export_name} }} from './{ts_file_path}';\n"
         
         with open(self.output_dir / "index.ts", 'w') as f:
             f.write(index_content)
@@ -261,17 +224,19 @@ export function {node.name}({args_str}): any {{
             try:
                 result = self.transpile_python_file(py_file)
                 
-                # Determine output folder and filename
-                output_folder = self.determine_output_folder(py_file)
-                ts_filename = py_file.stem + '.ts'
-                output_path = self.output_dir / output_folder / ts_filename
+                # Determine output path while preserving directory structure
+                relative_path = py_file.relative_to(self.source_dir)
+                output_path = self.output_dir / relative_path.with_suffix('.ts')
+
+                # Create parent directory if it doesn't exist
+                output_path.parent.mkdir(parents=True, exist_ok=True)
                 
                 # Write TypeScript file
                 with open(output_path, 'w') as f:
                     f.write(result['typescript'])
                 
                 # Store metadata
-                all_metadata[py_file.name] = result['metadata']
+                all_metadata[str(py_file)] = result['metadata']
                 
                 print(f"✅ {py_file} -> {output_path}")
                 
