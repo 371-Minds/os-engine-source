@@ -6,9 +6,12 @@
 import asyncio
 import json
 import logging
+import re
+import uuid
+import dataclasses
 from typing import Dict, List, Optional, Set
 from dataclasses import dataclass
-from base_agent import BaseAgent, AgentType, Task, TaskStatus, AgentCapability
+from base_agent import BaseAgent, AgentType, Task, TaskStatus, AgentCapability, DeploymentRequest
 
 @dataclass
 class RoutingDecision:
@@ -158,6 +161,63 @@ class IntelligentRoutingSystem(BaseAgent):
             # Parallel execution, so take the longest agent time + coordination overhead
             return max(base_times.get(agent, 120) for agent in agents) + 60
 
+    def _generate_task_id(self):
+        return str(uuid.uuid4())
+
+    def _extract_repo_url(self, user_input: str) -> Optional[str]:
+        match = re.search(r'https?://[^\s]+', user_input)
+        return match.group(0) if match else "https://github.com/example/repo"
+
+    def _extract_branch(self, user_input: str) -> Optional[str]:
+        match = re.search(r'\bbranch\s+([^\s]+)', user_input)
+        return match.group(1) if match else "main"
+
+    def _extract_domain(self, user_input: str) -> Optional[str]:
+        match = re.search(r'\bdomain\s+([^\s]+)', user_input)
+        return match.group(1) if match else "app.example.com"
+
+    def _extract_provider(self, user_input: str) -> Optional[str]:
+        if "digitalocean" in user_input.lower():
+            return "digitalocean"
+        if "aws" in user_input.lower():
+            return "aws"
+        if "gcp" in user_input.lower():
+            return "gcp"
+        return "digitalocean"
+
+    def _extract_infra_spec(self, user_input: str) -> Dict:
+        # This would be a more complex parsing in a real system
+        return {"size": "s-1vcpu-1gb", "region": "nyc3", "replicas": 1}
+
+    def _extract_registry(self, user_input: str) -> str:
+        # Placeholder
+        return "registry.digitalocean.com/myapp"
+
+    def _extract_env_vars(self, user_input: str) -> Dict[str, str]:
+        # Placeholder
+        return {"NODE_ENV": "production"}
+
+    def _build_deployment_request(self, user_input: str, task_id: str) -> DeploymentRequest:
+        """Constructs a DeploymentRequest from user input."""
+        repo_url = self._extract_repo_url(user_input)
+        branch = self._extract_branch(user_input)
+        env = "production" if "production" in user_input else "staging"
+        domain = self._extract_domain(user_input)
+
+        return DeploymentRequest(
+            task_id=task_id,
+            repo_url=repo_url,
+            repo_branch=branch,
+            target_environment=env,
+            cloud_provider=self._extract_provider(user_input) or "digitalocean",
+            infra_spec=self._extract_infra_spec(user_input),
+            domain=domain,
+            ssl="ssl" in user_input.lower(),
+            build_commands="npm install && npm run build",
+            container_registry=self._extract_registry(user_input),
+            environment_vars=self._extract_env_vars(user_input)
+        )
+
     async def orchestrate_execution(self, routing_decision: RoutingDecision, 
                                    task_payload: Dict) -> List[Task]:
         """
@@ -166,14 +226,24 @@ class IntelligentRoutingSystem(BaseAgent):
         self.logger.info(f"Orchestrating execution for task {routing_decision.task_id}")
 
         tasks = []
+        user_submission = task_payload.get("submission", "")
 
         # Create tasks for each assigned agent
         for i, agent_type in enumerate(routing_decision.assigned_agents):
+            sub_task_id = f"{routing_decision.task_id}_subtask_{i+1}"
+            current_payload = task_payload
+
+            # If the agent is a deployment agent, build a specialized payload
+            if agent_type == AgentType.DEPLOYMENT:
+                self.logger.info(f"Building specialized deployment request for sub-task {sub_task_id}")
+                deployment_request = self._build_deployment_request(user_submission, sub_task_id)
+                current_payload = dataclasses.asdict(deployment_request)
+
             task = Task(
-                id=f"{routing_decision.task_id}_subtask_{i+1}",
+                id=sub_task_id,
                 description=f"Execute {agent_type.value} for {routing_decision.task_id}",
                 agent_type=agent_type,
-                payload=task_payload
+                payload=current_payload
             )
             tasks.append(task)
             self.active_tasks[task.id] = task

@@ -20,7 +20,7 @@ class AgentType(Enum):
     CODE_GENERATION = "code_generation"
     MARKETING_ASSET = "marketing_asset"
     BUSINESS_LOGIC = "business_logic"
-    DEPLOYMENT = "deployment"
+    DEPLOYMENT = "deployment_agent"
     CREDENTIAL_MANAGER = "credential_manager"
     MARKETING_AUTOMATION = "marketing_automation"
     REPOSITORY_INTAKE = "repository_intake"
@@ -40,6 +40,10 @@ class TaskStatus(Enum):
     COMPLETED = "completed"
     FAILED = "failed"
     REQUIRES_HUMAN_APPROVAL = "requires_human_approval"
+    PROVISIONING = "provisioning"
+    DEPLOYING = "deploying"
+    CONFIGURING = "configuring"
+    FINALIZING = "finalizing"
 
 @dataclass
 class Task:
@@ -54,6 +58,30 @@ class Task:
     result: Optional[Dict[str, Any]] = None
     requires_human_approval: bool = False
     human_approval_message: Optional[str] = None
+
+
+@dataclass
+class DeploymentRequest:
+    task_id: str
+    repo_url: str
+    repo_branch: str
+    target_environment: str       # e.g., "staging", "production"
+    cloud_provider: str           # e.g., "digitalocean", "aws", "gcp"
+    infra_spec: Dict[str, Any]    # CPU, memory, replicas, region
+    domain: str                   # e.g., "app.example.com"
+    ssl: bool                     # whether to configure SSL
+    build_commands: str           # e.g., "npm install && npm run build"
+    container_registry: str       # e.g., "registry.digitalocean.com/myapp"
+    environment_vars: Dict[str, str]
+
+@dataclass
+class DeploymentContext:
+    droplet_ids: Dict[str, int]
+    container_image: str
+    dns_record: Dict[str, Any]
+    ssl_certificate_id: str
+    start_time: float
+    end_time: float
 
 @dataclass
 class AgentCapability:
