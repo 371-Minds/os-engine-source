@@ -43,3 +43,7 @@ mypy>=0.910
 radon>=5.1.0  # Code complexity analysis
 lizard>=1.17.0  # Cyclomatic complexity
 semgrep>=1.0.0  # Static analysis
+
+# Github Actions
+py2ts>=0.1.0
+ast2json>=0.3.0
