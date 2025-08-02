@@ -45,5 +45,5 @@ lizard>=1.17.0  # Cyclomatic complexity
 semgrep>=1.0.0  # Static analysis
 
 # Github Actions
-py2ts>=0.1.0
+py2ts>=0.0.6
 ast2json>=0.3.0

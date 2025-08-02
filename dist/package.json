@@ -1,0 +1,23 @@
+{
+  "name": "@371-minds/os-engine",
+  "version": "1.0.0",
+  "description": "371 OS Core Engine - Transpiled TypeScript modules",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "keywords": [
+    "371-os",
+    "ai",
+    "agents",
+    "typescript"
+  ],
+  "author": "371 Minds",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

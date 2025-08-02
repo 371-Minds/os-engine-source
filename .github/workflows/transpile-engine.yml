@@ -38,25 +38,21 @@ jobs:
 
     - name: Install Python dependencies
       run: |
-        cd source
-        pip install -r requirements.txt
-        pip install py2ts ast2json
+        python -m pip install --upgrade pip
+        pip install -r source/requirements.txt
 
     - name: Run transpilation
       run: |
-        cd source
-        python scripts/transpile.py
+        python source/scripts/transpile.py
 
-    - name: Copy outputs to dist repo
-      run: |
-        cp -r source/dist/* dist/
-        cd dist
-        
     - name: Commit and push to os-engine-dist
       run: |
         cd dist
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
+        # Copy transpiled files
+        rm -rf ./*
+        cp -r ../source/dist/* .
         git add .
-        git commit -m "Auto-transpile from os-engine-source@${{ github.sha }}" || exit 0
+        git commit -m "Transpile Python to TypeScript from os-engine-source@${{ github.sha }}" || exit 0
         git push
