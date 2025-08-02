@@ -10,6 +10,7 @@ import logging
 from typing import Dict, List, Any, Tuple
 from dataclasses import dataclass
 from base_agent import BaseAgent, AgentType, Task, TaskStatus, AgentCapability
+from brokkai_client import BrokkAiClient
 
 # Simple token estimator (approx 4 chars per token assumption)
 def estimate_tokens(text: str) -> int:
@@ -276,9 +277,57 @@ class LogicExtractorAgent(BaseAgent):
             AgentCapability(
                 name='estimate_token_savings',
                 description='Estimate LLM tokens saved by rule-based parsing'
+            ),
+            AgentCapability(
+                name='analyze_with_brokkai',
+                description='Analyze code with BrokkAi for semantic understanding'
             )
         ]
         super().__init__(agent_id, AgentType.BUSINESS_LOGIC, capabilities)
+        self.brokkai_client = BrokkAiClient(api_key="dummy_api_key")
+
+    def analyze_with_brokkai(self, command: str) -> Dict[str, Any]:
+        """
+        Analyzes a command using the mock BrokkAi client.
+
+        Args:
+            command: The command to be analyzed.
+
+        Returns:
+            The analysis result from the mock BrokkAi client.
+        """
+        # In a real scenario, we might extract a code snippet from the command
+        # or pass the entire command to BrokkAi.
+        return self.brokkai_client.analyze_code(command)
+
+    def _process_brokkai_analysis(self, analysis: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Processes the raw analysis from BrokkAi into a structured format.
+
+        Args:
+            analysis: The raw analysis dictionary from the BrokkAi client.
+
+        Returns:
+            A structured dictionary containing the processed information.
+        """
+        if not analysis or "semantic_analysis" not in analysis:
+            return {
+                "error": "Invalid analysis format from BrokkAi",
+                "language": "unknown",
+                "libraries": [],
+                "functions": [],
+                "classes": []
+            }
+
+        semantic_data = analysis.get("semantic_analysis", {})
+        processed_data = {
+            "language": semantic_data.get("language", "unknown"),
+            "libraries": semantic_data.get("libraries", []),
+            "functions": [f.get("name") for f in semantic_data.get("functions", [])],
+            "classes": [c.get("name") for c in semantic_data.get("classes", [])],
+            "confidence": analysis.get("confidence_score", 0.0)
+        }
+        return processed_data
 
     def _match_action(self, text: str) -> str:
         for pattern, action in ACTION_PATTERNS:
@@ -315,6 +364,7 @@ class LogicExtractorAgent(BaseAgent):
         text = task.payload.get('command', '')
         original_tokens = estimate_tokens(text)
 
+        # Original parsing logic
         parse_result = self.parse_command(text)
         structured_payload = {
             'action': parse_result.action,
@@ -323,12 +373,16 @@ class LogicExtractorAgent(BaseAgent):
             'parameters': parse_result.parameters,
             'original_text': text
         }
-
         structured_tokens = estimate_tokens(str(structured_payload))
         tokens_saved = max(0, original_tokens - structured_tokens)
 
+        # BrokkAi semantic analysis
+        brokkai_raw_analysis = self.analyze_with_brokkai(text)
+        brokkai_processed_analysis = self._process_brokkai_analysis(brokkai_raw_analysis)
+
         return {
             'structured_payload': structured_payload,
+            'brokkai_analysis': brokkai_processed_analysis,
             'original_tokens': original_tokens,
             'structured_tokens': structured_tokens,
             'tokens_saved': tokens_saved
