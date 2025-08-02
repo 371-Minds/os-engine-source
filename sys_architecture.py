@@ -57,6 +57,32 @@ architecture_data = {
                         "Monitoring setup",
                         "SSL and DNS configuration"
                     ]
+                },
+                "financial_system": {
+                    "purpose": "Manages financial operations, including billing, banking, and tax optimization.",
+                    "capabilities": [
+                        "P&L analysis and reporting",
+                        "R&D tax credit optimization",
+                        "Multi-platform billing orchestration (Stripe, etc.)",
+                        "Bank account synchronization and transaction categorization"
+                    ]
+                },
+                "analytics_system": {
+                    "purpose": "Provides centralized analytics and tracking for the entire OS.",
+                    "capabilities": [
+                        "Tracks agent execution and performance",
+                        "Monitors code generation and repository analysis",
+                        "Logs errors and system health",
+                        "Integrates with PostHog for data visualization"
+                    ]
+                },
+                "qa_system": {
+                    "purpose": "Ensures quality and performs testing on core components.",
+                    "capabilities": [
+                        "Automated testing of the LLM router",
+                        "Executes QA tasks and validates responses",
+                        "Supports continuous integration and quality assurance"
+                    ]
                 }
             },
             "secure_credential_warehouse": {
