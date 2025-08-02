@@ -236,6 +236,30 @@ class SecureCredentialWarehouse(BaseAgent):
             "expires_at": credential.expires_at.isoformat() if credential.expires_at else None
         }
 
+    async def get_secret(self, name: str, agent_id: str) -> Any:
+        """
+        Finds a credential by name and returns its decrypted value.
+        This is a convenience method for agents.
+        If the credential data has a single field, its value is returned.
+        Otherwise, the entire data dictionary is returned.
+        """
+        found_id = None
+        for cred_id, cred_entry in self.credentials.items():
+            if cred_entry.name == name:
+                found_id = cred_id
+                break
+
+        if not found_id:
+            raise ValueError(f"Secret with name '{name}' not found.")
+
+        credential_data = await self.retrieve_credential(found_id, agent_id)
+
+        secret_payload = credential_data.get("data", {})
+        if isinstance(secret_payload, dict) and len(secret_payload) == 1:
+            return next(iter(secret_payload.values()))
+
+        return secret_payload
+
     async def rotate_credential(self, credential_id: str, new_credential_data: Dict[str, Any], 
                                agent_id: str) -> bool:
         """
