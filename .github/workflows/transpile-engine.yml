@@ -1,0 +1,62 @@
+name: Core Engine Transpiler
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '**.py'
+      - 'requirements.txt'
+      - '.github/workflows/transpile-engine.yml'
+
+jobs:
+  transpile:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout os-engine-source
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        path: source
+
+    - name: Checkout os-engine-dist
+      uses: actions/checkout@v4
+      with:
+        repository: 371-Minds/os-engine-dist
+        token: ${{ secrets.GITHUB_TOKEN }}
+        path: dist
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install Python dependencies
+      run: |
+        cd source
+        pip install -r requirements.txt
+        pip install py2ts ast2json
+
+    - name: Run transpilation
+      run: |
+        cd source
+        python scripts/transpile.py
+
+    - name: Copy outputs to dist repo
+      run: |
+        cp -r source/dist/* dist/
+        cd dist
+        
+    - name: Commit and push to os-engine-dist
+      run: |
+        cd dist
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "Auto-transpile from os-engine-source@${{ github.sha }}" || exit 0
+        git push
