@@ -26,6 +26,7 @@ class AgentType(Enum):
     REPOSITORY_INTAKE = "repository_intake"
     QA_AUTOMATION = "qa_automation"
     TECH_STACK_SPECIALIST = "tech_stack_specialist"
+    AGENT_UTILITY_BELT = "agent_utility_belt"
     CEO = "ceo"
     CTO = "cto"
     CMO = "cmo"

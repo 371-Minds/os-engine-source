@@ -6,8 +6,10 @@ import time
 import subprocess
 from pathlib import Path
 from typing import Dict, List, Optional, Any
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from datetime import datetime
+import yaml
+import requests
 
 from base_agent import BaseAgent, AgentType, Task, AgentCapability
 from analytics_371 import Analytics371
@@ -28,6 +30,7 @@ class RepositoryContext:
     last_commit_hash: str = ""
     last_commit_date: str = ""
     processed_at: str = ""
+    structured_data: Optional[Dict[str, Any]] = field(default_factory=dict)
 
     def __post_init__(self):
         if self.languages is None:
@@ -76,6 +79,8 @@ class RepoIntakeAgent(BaseAgent):
             local_path = self._clone_repository(repo_url, task.id)
             self.logger.info("DEBUG: Analyzing repository...")
             context = self._analyze_repository(local_path, repo_url)
+            self.logger.info("DEBUG: Fetching structured.yaml...")
+            context.structured_data = self._get_structured_yaml(repo_url)
             self.logger.info("DEBUG: Bundling repository...")
             self._bundle_repository(local_path)
 
@@ -145,6 +150,30 @@ class RepoIntakeAgent(BaseAgent):
             pass
 
         return context
+
+    def _get_structured_yaml(self, repo_url: str) -> Optional[Dict[str, Any]]:
+        """Fetch and parse structured.yaml from a repository."""
+        # Note: This is a simplified approach that assumes a public GitHub repo
+        # and a common branch name. A more robust solution would use the
+        # GitHub API and handle different branches.
+        if not repo_url.startswith("https://github.com/"):
+            return None
+
+        # Convert git URL to raw content URL
+        base_url = repo_url.replace(".git", "").replace("github.com", "raw.githubusercontent.com")
+
+        for branch in ["main", "master"]:
+            yaml_url = f"{base_url}/{branch}/structured.yaml"
+            try:
+                response = requests.get(yaml_url)
+                if response.status_code == 200:
+                    return yaml.safe_load(response.text)
+            except requests.RequestException as e:
+                self.logger.warning(f"Could not fetch structured.yaml from {yaml_url}: {e}")
+                continue
+
+        self.logger.info(f"No structured.yaml found for {repo_url}")
+        return None
 
     def _is_binary(self, file_path: Path) -> bool:
         """Check if a file is likely binary."""
