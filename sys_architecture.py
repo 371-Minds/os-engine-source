@@ -5,18 +5,19 @@ import json
 
 architecture_data = {
     "371_minds_os": {
+        "version": "0.1.0",
         "core_components": {
             "intelligent_routing_system": {
                 "description": "Central orchestrator that analyzes submissions and determines system activation",
                 "responsibilities": [
                     "Analyzes what user submitted",
-                    "Determines what systems need to activate", 
+                    "Determines what systems need to activate",
                     "Orchestrates parallel execution",
                     "Monitors for decision points"
                 ],
                 "key_features": [
                     "No token waste on agent conversations",
-                    "Parallel execution without coordination overhead", 
+                    "Parallel execution without coordination overhead",
                     "Human-in-the-loop for actual decisions only",
                     "Scales infinitely with specialized systems"
                 ]
@@ -108,7 +109,7 @@ architecture_data = {
                 "description": "Smart notification system for decision points",
                 "alert_types": [
                     "Logo options ready for approval",
-                    "Database schema needs final review", 
+                    "Database schema needs final review",
                     "Marketing copy requires brand voice check",
                     "Ready for production deployment - confirm?"
                 ]
@@ -138,7 +139,16 @@ architecture_data = {
                 "Concurrent: Parallel execution",
                 "Handoff: Dynamic agent switching",
                 "Group Chat: Collaborative problem solving"
-            ]
+            ],
+            "serverless_backend": {
+                "technology": "Convex",
+                "description": "A serverless backend platform for the Electron application.",
+                "features_used": [
+                    "Real-time database for tasks",
+                    "Serverless functions (queries and mutations)",
+                    "Offline caching with IndexedDB"
+                ]
+            }
         }
     }
 }
