@@ -1,49 +1,72 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow } = require('electron');
 const path = require('path');
-const AIOrchestrator = require('./src/main/ai-orchestrator');
-const SystemMonitor = require('./src/main/system-monitor');
-const KnowledgeDB = require('./src/main/knowledge-db');
+const { spawn } = require('child_process');
 
-class AIIDEApp {
-  constructor() {
-    this.aiOrchestrator = new AIOrchestrator();
-    this.systemMonitor = new SystemMonitor(this.aiOrchestrator);
-    this.knowledgeDB = new KnowledgeDB();
-    this.mainWindow = null;
-  }
+let backendProcess = null;
 
-  async createWindow() {
-    this.mainWindow = new BrowserWindow({
-      width: 1400,
-      height: 900,
-      webPreferences: {
-        nodeIntegration: false,
-        contextIsolation: true,
-        preload: path.join(__dirname, 'preload.js')
-      }
-    });
-
-    await this.mainWindow.loadFile('src/renderer/index.html');
-    this.setupIPC();
-  }
-
-  setupIPC() {
-    // AI agent communication
-    ipcMain.handle('ai:process-code', async (event, code) => {
-      return await this.aiOrchestrator.processCode(code);
-    });
-
-    ipcMain.handle('ai:terminal-command', async (event, command) => {
-      return await this.aiOrchestrator.processTerminalCommand(command);
-    });
-
-    // System monitoring
-    ipcMain.handle('system:start-monitoring', async (event, path) => {
-      return this.systemMonitor.startWatching(path);
-    });
-  }
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 1400,
+    height: 900,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
+    }
+  });
+  win.loadFile(path.join(__dirname, 'src/renderer/index.html'));
 }
 
-const ideApp = new AIIDEApp();
+app.whenReady().then(() => {
+  // Path to the Python script
+  const pythonScript = path.join(__dirname, 'server.py');
 
-app.whenReady().then(() => ideApp.createWindow());
+  // Path to the python executable in a virtual environment
+  // This makes the assumption that a 'venv' exists in the project root.
+  // A more robust solution might find python3 in the PATH.
+  const pythonExecutable = process.platform === 'win32'
+    ? path.join(__dirname, '../../venv/Scripts/python.exe')
+    : path.join(__dirname, '../../venv/bin/python');
+
+  console.log(`Spawning backend process: ${pythonExecutable} ${pythonScript}`);
+
+  // Spawn the backend process
+  backendProcess = spawn(pythonExecutable, [pythonScript], {
+    // The CWD must be the directory containing server.py so that its internal imports work
+    cwd: __dirname,
+    // The following options are for debugging the backend process from the Electron main process logs
+    stdio: ['pipe', 'pipe', 'pipe', 'ipc']
+  });
+
+  backendProcess.stdout.on('data', (data) => {
+    console.log(`Backend stdout: ${data}`);
+  });
+  backendProcess.stderr.on('data', (data) => {
+    console.error(`Backend stderr: ${data}`);
+  });
+  backendProcess.on('close', (code) => {
+    console.log(`Backend process exited with code ${code}`);
+  });
+
+  createWindow();
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+});
+
+// Quit the backend process when the app closes
+app.on('will-quit', () => {
+  if (backendProcess) {
+    console.log('Killing backend process...');
+    backendProcess.kill();
+  }
+});
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
