@@ -3,33 +3,38 @@ require.config({ paths: { vs: '../node_modules/monaco-editor/min/vs' } });
 
 require(['vs/editor/editor.main'], function () {
     const editor = monaco.editor.create(document.getElementById('editor-container'), {
-        value: '// Your AI-powered IDE\nconsole.log("Hello, AI!");',
+        value: '// Place your code here and click "Analyze Code"\n',
         language: 'javascript',
         theme: 'vs-dark'
     });
 
-    // AI integration on code changes
-    editor.onDidChangeModelContent(async () => {
+    const executeBtn = document.getElementById('execute-btn');
+    const resultOutput = document.getElementById('result-output');
+
+    executeBtn.addEventListener('click', async () => {
         const code = editor.getValue();
-        const aiResponse = await window.electronAPI.processCode(code);
-        updateAIPanel(aiResponse);
+        resultOutput.textContent = 'Analyzing...';
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000/api/execute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ submission: code }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            resultOutput.textContent = JSON.stringify(data.result, null, 2);
+
+        } catch (error) {
+            console.error('Error:', error);
+            resultOutput.textContent = 'Error: ' + error.message;
+        }
     });
 });
-
-// Terminal setup (Warp-style)
-class AITerminal {
-    constructor() {
-        this.setupTerminal();
-    }
-
-    async setupTerminal() {
-        // Terminal integration code here
-    }
-
-    async processCommand(command) {
-        const aiSuggestion = await window.electronAPI.processTerminalCommand(command);
-        this.displayAISuggestion(aiSuggestion);
-    }
-}
-
-const terminal = new AITerminal();
