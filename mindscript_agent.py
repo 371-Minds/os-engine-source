@@ -88,6 +88,12 @@ ACTION_PATTERNS: List[Tuple[str, str]] = [
 # Resource patterns for categories
 RESOURCE_PATTERNS: Dict[str, List[Tuple[str, str]]] = {
     # Existing categories (keeping all current ones)
+    'utility_belt': [
+        (r'services?', 'catalog_services'),
+        (r'catalog', 'service_catalog'),
+        (r'utility belt', 'agent_utility_belt')
+    ],
+
     'knowledge': [
         (r'knowledge base', 'knowledge_base'),
         (r'(?:conversation|chat)', 'chat_history'),
@@ -348,6 +354,12 @@ class LogicExtractorAgent(BaseAgent):
         matches = re.findall(r'"([^"]+)"', text)
         if matches:
             params['query'] = matches[0]
+
+        # Extract tag for utility belt commands
+        tag_match = re.search(r'tag\s+([a-zA-Z0-9_-]+)', text, re.IGNORECASE)
+        if tag_match:
+            params['tag'] = tag_match.group(1)
+
         # Extract numbers (e.g., MRR target)
         num_match = re.search(r'\$?[0-9,]+', text)
         if num_match:
@@ -366,8 +378,13 @@ class LogicExtractorAgent(BaseAgent):
 
         # Original parsing logic
         parse_result = self.parse_command(text)
+
+        action = parse_result.action
+        if parse_result.category == 'utility_belt' and parse_result.resource == 'catalog_services' and action == 'search':
+            action = 'find_services_by_tag'
+
         structured_payload = {
-            'action': parse_result.action,
+            'action': action,
             'category': parse_result.category,
             'resource': parse_result.resource,
             'parameters': parse_result.parameters,
