@@ -1,67 +1,64 @@
 import { ConvexReactClient } from "convex/react";
 import { api } from "../convex/_generated/api";
-import { cacheTasks, getCachedTasks } from "./idb.js";
+import { cacheQAPairs, getCachedQAPairs } from "./idb.js";
 
 const convex = new ConvexReactClient(process.env.CONVEX_URL);
 
-const taskList = document.getElementById("taskList");
-const addTaskForm = document.getElementById("addTaskForm");
-const taskInput = document.getElementById("taskInput");
+const qaList = document.getElementById("qaList");
+const askQuestionForm = document.getElementById("askQuestionForm");
+const questionInput = document.getElementById("questionInput");
 const statusDiv = document.getElementById("status");
 
-function render(tasks) {
-    taskList.innerHTML = "";
-    tasks.forEach(task => {
+function render(qa_pairs) {
+    qaList.innerHTML = "";
+    qa_pairs.forEach(pair => {
         const li = document.createElement("li");
-        li.textContent = task.body;
-        if (task.isCompleted) {
-            li.classList.add("completed");
-        }
-        taskList.appendChild(li);
+        li.innerHTML = `<strong>Q:</strong> ${pair.question}<br><strong>A:</strong> ${pair.answer}`;
+        qaList.appendChild(li);
     });
 }
 
 async function loadInitialView() {
-    statusDiv.textContent = "Loading cached tasks...";
+    statusDiv.textContent = "Loading cached history...";
     try {
-        const cachedTasks = await getCachedTasks();
-        if (cachedTasks.length > 0) {
-            render(cachedTasks);
-            statusDiv.textContent = "Offline (displaying cached tasks)";
+        const cachedPairs = await getCachedQAPairs();
+        if (cachedPairs.length > 0) {
+            render(cachedPairs);
+            statusDiv.textContent = "Offline (displaying cached history)";
         } else {
-            statusDiv.textContent = "No cached tasks found. Please connect to add tasks.";
+            statusDiv.textContent = "No cached history found. Please connect to ask a question.";
         }
     } catch (error) {
-        console.error("Failed to load cached tasks:", error);
+        console.error("Failed to load cached history:", error);
         statusDiv.textContent = "Error loading cache. Please connect.";
     }
 }
 
-// Load cached tasks on startup
+// Load cached history on startup
 loadInitialView();
 
 // This will run when Convex connection is established
-convex.onUpdate(api.tasks.get, {}, async (tasks) => {
-    render(tasks);
-    await cacheTasks(tasks);
+convex.onUpdate(api.qa.getHistory, {}, async (qa_pairs) => {
+    render(qa_pairs);
+    await cacheQAPairs(qa_pairs);
 });
 
-addTaskForm.addEventListener("submit", async (e) => {
+askQuestionForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const taskBody = taskInput.value;
-    if (taskBody) {
+    const question = questionInput.value;
+    if (question) {
         try {
-            await convex.mutation(api.tasks.add, { body: taskBody });
-            taskInput.value = "";
+            await convex.mutation(api.qa.ask, { question: question });
+            questionInput.value = "";
         } catch (error) {
-            console.error("Failed to add task:", error);
-            alert("Failed to add task. You might be offline.");
+            console.error("Failed to ask question:", error);
+            alert("Failed to ask question. You might be offline.");
         }
     }
 });
 
 convex.connectionState.onUpdate((state) => {
-    // We get a more detailed status from the onUpdate handler for tasks
+    // We get a more detailed status from the onUpdate handler for qa_pairs
     if (state.type === 'connected') {
         statusDiv.textContent = "Status: Connected";
     } else {
