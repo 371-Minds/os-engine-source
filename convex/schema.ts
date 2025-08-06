@@ -6,5 +6,10 @@ export default defineSchema({
     question: v.string(),
     answer: v.string(),
     timestamp: v.number(),
+    result: v.optional(v.string()),
+  }),
+  tasks: defineTable({
+    body: v.string(),
+    isCompleted: v.boolean(),
   }),
 });
