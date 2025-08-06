@@ -8,12 +8,17 @@ const qaList = document.getElementById("qaList");
 const askQuestionForm = document.getElementById("askQuestionForm");
 const questionInput = document.getElementById("questionInput");
 const statusDiv = document.getElementById("status");
+const agentTaskForm = document.getElementById("agentTaskForm");
+const agentTaskInput = document.getElementById("agentTaskInput");
 
 function render(qa_pairs) {
     qaList.innerHTML = "";
     qa_pairs.forEach(pair => {
         const li = document.createElement("li");
         li.innerHTML = `<strong>Q:</strong> ${pair.question}<br><strong>A:</strong> ${pair.answer}`;
+        if (pair.result) {
+            li.innerHTML += `<br><strong>Result:</strong> ${pair.result}`;
+        }
         qaList.appendChild(li);
     });
 }
@@ -53,6 +58,20 @@ askQuestionForm.addEventListener("submit", async (e) => {
         } catch (error) {
             console.error("Failed to ask question:", error);
             alert("Failed to ask question. You might be offline.");
+        }
+    }
+});
+
+agentTaskForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const task = agentTaskInput.value;
+    if (task) {
+        try {
+            await convex.mutation(api.agentTasks.addAgentTask, { task: task });
+            agentTaskInput.value = "";
+        } catch (error) {
+            console.error("Failed to add agent task:", error);
+            alert("Failed to add agent task. You might be offline.");
         }
     }
 });
