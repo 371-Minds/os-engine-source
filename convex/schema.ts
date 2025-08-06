@@ -2,8 +2,9 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
-  tasks: defineTable({
-    body: v.string(),
-    isCompleted: v.boolean(),
+  qa_pairs: defineTable({
+    question: v.string(),
+    answer: v.string(),
+    timestamp: v.number(),
   }),
 });

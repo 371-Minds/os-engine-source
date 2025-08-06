@@ -1,5 +1,5 @@
-const DB_NAME = "convex-todo-cache";
-const STORE_NAME = "tasks";
+const DB_NAME = "convex-qa-cache";
+const STORE_NAME = "qa_pairs";
 const DB_VERSION = 1;
 
 let db;
@@ -30,18 +30,18 @@ function openDB() {
     });
 }
 
-export async function cacheTasks(tasks) {
+export async function cacheQAPairs(qa_pairs) {
     const db = await openDB();
     const transaction = db.transaction(STORE_NAME, "readwrite");
     const store = transaction.objectStore(STORE_NAME);
     store.clear(); // Clear old cache
-    tasks.forEach(task => {
-        store.put(task);
+    qa_pairs.forEach(pair => {
+        store.put(pair);
     });
     return transaction.complete;
 }
 
-export async function getCachedTasks() {
+export async function getCachedQAPairs() {
     const db = await openDB();
     const transaction = db.transaction(STORE_NAME, "readonly");
     const store = transaction.objectStore(STORE_NAME);
