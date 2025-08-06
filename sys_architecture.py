@@ -9,6 +9,7 @@ architecture_data = {
         "core_components": {
             "intelligent_routing_system": {
                 "description": "Central orchestrator that analyzes submissions and determines system activation",
+                "backend": "Convex",
                 "responsibilities": [
                     "Analyzes what user submitted",
                     "Determines what systems need to activate",
@@ -25,6 +26,7 @@ architecture_data = {
             "specialized_execution_systems": {
                 "code_generation_system": {
                     "purpose": "Ingests repo, applies tech stack wisdom",
+                    "backend": "Convex",
                     "capabilities": [
                         "Repository analysis",
                         "Technology stack optimization",
@@ -34,6 +36,7 @@ architecture_data = {
                 },
                 "marketing_asset_system": {
                     "purpose": "Brand consistency, asset optimization",
+                    "backend": "Convex",
                     "capabilities": [
                         "Brand voice maintenance",
                         "Asset creation and optimization",
@@ -43,6 +46,7 @@ architecture_data = {
                 },
                 "business_logic_system": {
                     "purpose": "PRD creation, requirement analysis",
+                    "backend": "Convex",
                     "capabilities": [
                         "Product requirement documentation",
                         "Business logic validation",
@@ -52,6 +56,7 @@ architecture_data = {
                 },
                 "deployment_system": {
                     "purpose": "Infrastructure, CI/CD pipeline",
+                    "backend": "Convex",
                     "capabilities": [
                         "Infrastructure provisioning",
                         "Deployment automation",
@@ -61,6 +66,7 @@ architecture_data = {
                 },
                 "financial_system": {
                     "purpose": "Manages financial operations, including billing, banking, and tax optimization.",
+                    "backend": "Convex",
                     "capabilities": [
                         "P&L analysis and reporting",
                         "R&D tax credit optimization",
@@ -70,6 +76,7 @@ architecture_data = {
                 },
                 "analytics_system": {
                     "purpose": "Provides centralized analytics and tracking for the entire OS.",
+                    "backend": "Convex",
                     "capabilities": [
                         "Tracks agent execution and performance",
                         "Monitors code generation and repository analysis",
@@ -79,6 +86,7 @@ architecture_data = {
                 },
                 "qa_system": {
                     "purpose": "Ensures quality and performs testing on core components.",
+                    "backend": "Convex",
                     "capabilities": [
                         "Automated testing of the LLM router",
                         "Executes QA tasks and validates responses",
@@ -142,7 +150,7 @@ architecture_data = {
             ],
             "serverless_backend": {
                 "technology": "Convex",
-                "description": "A serverless backend platform for the Electron application.",
+                "description": "A serverless backend platform for the entire 371 Minds OS.",
                 "features_used": [
                     "Real-time database for tasks",
                     "Serverless functions (queries and mutations)",
