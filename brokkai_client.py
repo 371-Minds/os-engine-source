@@ -36,29 +36,48 @@ class BrokkAiClient:
             A dictionary with the simulated analysis results.
         """
         # In a real implementation, this would make an API call to BrokkAi.
-        # For this mock, we return a predefined JSON object.
+        # For this mock, we perform a basic analysis of the code snippet.
+        import re
+
+        functions = []
+        classes = []
+        libraries = []
+
+        # Find imported libraries
+        for line in code_snippet.splitlines():
+            line = line.strip()
+            if line.startswith("import"):
+                # e.g., "import os, sys"
+                libs = line.split("import")[1].strip()
+                libraries.extend([lib.strip() for lib in libs.split(',')])
+            elif line.startswith("from"):
+                # e.g., "from os import path"
+                lib = line.split("import")[0].split("from")[1].strip()
+                libraries.append(lib)
+
+        # Find function definitions
+        func_matches = re.findall(r"def\s+([a-zA-Z0-9_]+)", code_snippet)
+        for func_name in func_matches:
+            functions.append({
+                "name": func_name,
+                "signature": f"def {func_name}(...)",
+                "dependencies": []
+            })
+
+        # Find class definitions
+        class_matches = re.findall(r"class\s+([a-zA-Z0-9_]+)", code_snippet)
+        for class_name in class_matches:
+            classes.append({
+                "name": class_name,
+                "methods": [] # simplified for now
+            })
+
         mock_analysis = {
             "semantic_analysis": {
                 "language": "python",
-                "libraries": ["re", "logging", "typing"],
-                "functions": [
-                    {
-                        "name": "estimate_tokens",
-                        "signature": "def estimate_tokens(text: str) -> int",
-                        "dependencies": [],
-                    },
-                    {
-                        "name": "parse_command",
-                        "signature": "def parse_command(self, text: str) -> ParseResult",
-                        "dependencies": ["_match_action", "_match_category_resource", "_extract_parameters"],
-                    },
-                ],
-                "classes": [
-                    {
-                        "name": "LogicExtractorAgent",
-                        "methods": ["parse_command", "process_task", "health_check"],
-                    }
-                ],
+                "libraries": sorted(list(set([lib for lib in libraries if lib]))),
+                "functions": functions,
+                "classes": classes,
             },
             "confidence_score": 0.95,
         }
