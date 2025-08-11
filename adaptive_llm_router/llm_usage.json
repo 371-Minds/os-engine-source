@@ -1,0 +1,46 @@
+[
+  {
+    "ts": "2025-08-11T16:36:06.967806",
+    "provider": "openrouter",
+    "model": "qwen2-72b",
+    "tokens_in": 10,
+    "tokens_out": 20,
+    "cost": 5e-05,
+    "task_id": null,
+    "agent": "test_agent",
+    "status": "ok"
+  },
+  {
+    "ts": "2025-08-11T16:36:06.968473",
+    "provider": "openrouter",
+    "model": "gpt-4o-mini",
+    "tokens_in": 10,
+    "tokens_out": 20,
+    "cost": 1.7999999999999997e-05,
+    "task_id": null,
+    "agent": "test_agent",
+    "status": "ok"
+  },
+  {
+    "ts": "2025-08-11T16:36:06.969081",
+    "provider": "localai",
+    "model": "phi-4-14b",
+    "tokens_in": 10,
+    "tokens_out": 20,
+    "cost": 0.0,
+    "task_id": null,
+    "agent": "test_agent",
+    "status": "ok"
+  },
+  {
+    "ts": "2025-08-11T16:36:06.974040",
+    "provider": "openrouter",
+    "model": "qwen2-72b",
+    "tokens_in": 10,
+    "tokens_out": 20,
+    "cost": 5e-05,
+    "task_id": null,
+    "agent": "test_agent",
+    "status": "ok"
+  }
+]
