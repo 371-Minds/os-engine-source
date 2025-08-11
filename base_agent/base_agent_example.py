@@ -396,159 +396,160 @@ async def main():
     return report
 
 # Execute the benchmark
+async def run_benchmarks():
+    # Run the benchmark without asyncio.run since we're in a running event loop
+    print("🚀 Starting 371 OS Agent Benchmark Suite...")
+    print("="*60)
+
+    benchmark_suite = AgentBenchmarkSuite()
+
+    # Test 1: Concurrent Execution Performance
+    print("📊 Testing concurrent execution performance...")
+    config = LoadTestConfig(num_tasks=100, concurrent_tasks=20)
+    concurrent_result = await benchmark_suite.test_concurrent_execution(config)
+    print(f"   Throughput: {concurrent_result.throughput:.2f} tasks/sec")
+    print(f"   Success Rate: {concurrent_result.success_rate:.1f}%")
+    print(f"   Avg Response Time: {concurrent_result.avg_response_time:.3f}s")
+
+    # Test 2: Sequential vs Concurrent Comparison
+    print("\n🔄 Comparing sequential vs concurrent execution...")
+    comparison_results = await benchmark_suite.test_sequential_vs_concurrent()
+    seq_throughput = comparison_results['sequential'].throughput
+    conc_throughput = comparison_results['concurrent'].throughput
+    improvement = ((conc_throughput - seq_throughput) / seq_throughput) * 100
+    print(f"   Sequential: {seq_throughput:.2f} tasks/sec")
+    print(f"   Concurrent: {conc_throughput:.2f} tasks/sec")
+    print(f"   Performance Improvement: {improvement:.1f}%")
+
+    # Test 3: Memory Leak Detection
+    print("\n🧠 Testing for memory leaks...")
+    memory_result = await benchmark_suite.test_memory_leak_detection(iterations=5)
+    if hasattr(memory_result, 'memory_growth_mb'):
+        print(f"   Memory Growth: {memory_result.memory_growth_mb:.2f} MB")
+        if memory_result.memory_growth_mb > 10:
+            print("   ⚠️  Potential memory leak detected!")
+        else:
+            print("   ✅ Memory usage stable")
+
+    # Generate comprehensive report
+    print("\n📋 Generating benchmark report...")
+    report = benchmark_suite.generate_report()
+
+    print("\n" + "="*60)
+    print("📈 BENCHMARK RESULTS SUMMARY")
+    print("="*60)
+
+    print(f"Total Tests Run: {report['summary']['total_tests']}")
+    if 'avg_throughput' in report['performance_analysis']:
+        print(f"Average Throughput: {report['performance_analysis']['avg_throughput']:.2f} tasks/sec")
+    if 'avg_response_time' in report['performance_analysis']:
+        print(f"Average Response Time: {report['performance_analysis']['avg_response_time']:.3f}s")
+
+    print("\n🎯 RECOMMENDATIONS:")
+    for rec in report['recommendations']:
+        print(f"  {rec}")
+
+    print("\n📊 Detailed Results:")
+    for result in report['results']:
+        print(f"\n{result['test_name'].upper()}:")
+        print(f"  Duration: {result['duration']:.3f}s")
+        print(f"  Throughput: {result['throughput']:.2f} tasks/sec")
+        print(f"  Memory Usage: {result['memory_usage_mb']:.1f} MB")
+        print(f"  Success Rate: {result['success_rate']:.1f}%")
+
+    # Let's create a simpler, faster benchmark test
+    import time
+    import asyncio
+    from dataclasses import dataclass
+    from typing import List, Dict, Any
+
+    @dataclass
+    class SimpleBenchmarkResult:
+        test_name: str
+        duration: float
+        throughput: float
+        avg_response_time: float
+
+    class QuickBenchmark:
+        def __init__(self):
+            self.results: List[SimpleBenchmarkResult] = []
+
+        async def simple_task(self, delay: float = 0.1):
+            """Simulate a simple agent task"""
+            await asyncio.sleep(delay)
+            return f"Task completed in {delay}s"
+
+        async def test_concurrent_performance(self, num_tasks: int = 50):
+            """Quick concurrent performance test"""
+            print(f"🔬 Testing concurrent execution with {num_tasks} tasks...")
+
+            start_time = time.time()
+
+            # Create and run tasks concurrently
+            tasks = [self.simple_task(0.05) for _ in range(num_tasks)]
+            results = await asyncio.gather(*tasks)
+
+            end_time = time.time()
+            duration = end_time - start_time
+            throughput = num_tasks / duration
+            avg_response_time = duration / num_tasks
+
+            result = SimpleBenchmarkResult(
+                test_name="concurrent_execution",
+                duration=duration,
+                throughput=throughput,
+                avg_response_time=avg_response_time
+            )
+
+            self.results.append(result)
+            return result
+
+        async def test_sequential_performance(self, num_tasks: int = 20):
+            """Quick sequential performance test"""
+            print(f"🔬 Testing sequential execution with {num_tasks} tasks...")
+
+            start_time = time.time()
+
+            # Run tasks sequentially
+            for _ in range(num_tasks):
+                await self.simple_task(0.05)
+
+            end_time = time.time()
+            duration = end_time - start_time
+            throughput = num_tasks / duration
+            avg_response_time = duration / num_tasks
+
+            result = SimpleBenchmarkResult(
+                test_name="sequential_execution",
+                duration=duration,
+                throughput=throughput,
+                avg_response_time=avg_response_time
+            )
+
+            self.results.append(result)
+            return result
+
+    # Run quick benchmark
+    print("⚡ Running Quick Agent Benchmark Tests")
+    print("="*50)
+
+    quick_bench = QuickBenchmark()
+
+    # Test concurrent execution
+    concurrent_result = await quick_bench.test_concurrent_performance(50)
+    print(f"✅ Concurrent: {concurrent_result.throughput:.1f} tasks/sec, {concurrent_result.duration:.3f}s total")
+
+    # Test sequential execution
+    sequential_result = await quick_bench.test_sequential_performance(20)
+    print(f"✅ Sequential: {sequential_result.throughput:.1f} tasks/sec, {sequential_result.duration:.3f}s total")
+
+    # Calculate improvement
+    if sequential_result.throughput > 0:
+        improvement = ((concurrent_result.throughput - sequential_result.throughput) / sequential_result.throughput) * 100
+        print(f"\n📈 Concurrent execution is {improvement:.1f}% faster than sequential")
 if __name__ == "__main__":
     report = asyncio.run(main())
-
-# Run the benchmark without asyncio.run since we're in a running event loop
-print("🚀 Starting 371 OS Agent Benchmark Suite...")
-print("="*60)
-
-benchmark_suite = AgentBenchmarkSuite()
-
-# Test 1: Concurrent Execution Performance
-print("📊 Testing concurrent execution performance...")
-config = LoadTestConfig(num_tasks=100, concurrent_tasks=20)
-concurrent_result = await benchmark_suite.test_concurrent_execution(config)
-print(f"   Throughput: {concurrent_result.throughput:.2f} tasks/sec")
-print(f"   Success Rate: {concurrent_result.success_rate:.1f}%")
-print(f"   Avg Response Time: {concurrent_result.avg_response_time:.3f}s")
-
-# Test 2: Sequential vs Concurrent Comparison
-print("\n🔄 Comparing sequential vs concurrent execution...")
-comparison_results = await benchmark_suite.test_sequential_vs_concurrent()
-seq_throughput = comparison_results['sequential'].throughput
-conc_throughput = comparison_results['concurrent'].throughput
-improvement = ((conc_throughput - seq_throughput) / seq_throughput) * 100
-print(f"   Sequential: {seq_throughput:.2f} tasks/sec")
-print(f"   Concurrent: {conc_throughput:.2f} tasks/sec")
-print(f"   Performance Improvement: {improvement:.1f}%")
-
-# Test 3: Memory Leak Detection
-print("\n🧠 Testing for memory leaks...")
-memory_result = await benchmark_suite.test_memory_leak_detection(iterations=5)
-if hasattr(memory_result, 'memory_growth_mb'):
-    print(f"   Memory Growth: {memory_result.memory_growth_mb:.2f} MB")
-    if memory_result.memory_growth_mb > 10:
-        print("   ⚠️  Potential memory leak detected!")
-    else:
-        print("   ✅ Memory usage stable")
-
-# Generate comprehensive report
-print("\n📋 Generating benchmark report...")
-report = benchmark_suite.generate_report()
-
-print("\n" + "="*60)
-print("📈 BENCHMARK RESULTS SUMMARY")
-print("="*60)
-
-print(f"Total Tests Run: {report['summary']['total_tests']}")
-if 'avg_throughput' in report['performance_analysis']:
-    print(f"Average Throughput: {report['performance_analysis']['avg_throughput']:.2f} tasks/sec")
-if 'avg_response_time' in report['performance_analysis']:
-    print(f"Average Response Time: {report['performance_analysis']['avg_response_time']:.3f}s")
-
-print("\n🎯 RECOMMENDATIONS:")
-for rec in report['recommendations']:
-    print(f"  {rec}")
-
-print("\n📊 Detailed Results:")
-for result in report['results']:
-    print(f"\n{result['test_name'].upper()}:")
-    print(f"  Duration: {result['duration']:.3f}s")
-    print(f"  Throughput: {result['throughput']:.2f} tasks/sec") 
-    print(f"  Memory Usage: {result['memory_usage_mb']:.1f} MB")
-    print(f"  Success Rate: {result['success_rate']:.1f}%")
-
-# Let's create a simpler, faster benchmark test
-import time
-import asyncio
-from dataclasses import dataclass
-from typing import List, Dict, Any
-
-@dataclass
-class SimpleBenchmarkResult:
-    test_name: str
-    duration: float
-    throughput: float
-    avg_response_time: float
-
-class QuickBenchmark:
-    def __init__(self):
-        self.results: List[SimpleBenchmarkResult] = []
-    
-    async def simple_task(self, delay: float = 0.1):
-        """Simulate a simple agent task"""
-        await asyncio.sleep(delay)
-        return f"Task completed in {delay}s"
-    
-    async def test_concurrent_performance(self, num_tasks: int = 50):
-        """Quick concurrent performance test"""
-        print(f"🔬 Testing concurrent execution with {num_tasks} tasks...")
-        
-        start_time = time.time()
-        
-        # Create and run tasks concurrently
-        tasks = [self.simple_task(0.05) for _ in range(num_tasks)]
-        results = await asyncio.gather(*tasks)
-        
-        end_time = time.time()
-        duration = end_time - start_time
-        throughput = num_tasks / duration
-        avg_response_time = duration / num_tasks
-        
-        result = SimpleBenchmarkResult(
-            test_name="concurrent_execution",
-            duration=duration,
-            throughput=throughput,
-            avg_response_time=avg_response_time
-        )
-        
-        self.results.append(result)
-        return result
-    
-    async def test_sequential_performance(self, num_tasks: int = 20):
-        """Quick sequential performance test"""
-        print(f"🔬 Testing sequential execution with {num_tasks} tasks...")
-        
-        start_time = time.time()
-        
-        # Run tasks sequentially
-        for _ in range(num_tasks):
-            await self.simple_task(0.05)
-        
-        end_time = time.time()
-        duration = end_time - start_time
-        throughput = num_tasks / duration
-        avg_response_time = duration / num_tasks
-        
-        result = SimpleBenchmarkResult(
-            test_name="sequential_execution", 
-            duration=duration,
-            throughput=throughput,
-            avg_response_time=avg_response_time
-        )
-        
-        self.results.append(result)
-        return result
-
-# Run quick benchmark
-print("⚡ Running Quick Agent Benchmark Tests")
-print("="*50)
-
-quick_bench = QuickBenchmark()
-
-# Test concurrent execution
-concurrent_result = await quick_bench.test_concurrent_performance(50)
-print(f"✅ Concurrent: {concurrent_result.throughput:.1f} tasks/sec, {concurrent_result.duration:.3f}s total")
-
-# Test sequential execution  
-sequential_result = await quick_bench.test_sequential_performance(20)
-print(f"✅ Sequential: {sequential_result.throughput:.1f} tasks/sec, {sequential_result.duration:.3f}s total")
-
-# Calculate improvement
-if sequential_result.throughput > 0:
-    improvement = ((concurrent_result.throughput - sequential_result.throughput) / sequential_result.throughput) * 100
-    print(f"\n📈 Concurrent execution is {improvement:.1f}% faster than sequential")
+    asyncio.run(run_benchmarks())
 
 print("\n🎯 KEY FINDINGS FOR 371 OS AGENTS:")
 print("="*50)
