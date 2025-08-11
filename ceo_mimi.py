@@ -30,7 +30,7 @@ class CeoMimiAgent(BaseAgent):
     Collaboration Protocols: Weekly C-Suite meetings, quarterly strategic reviews, real-time escalation handling
     """
 
-    def __init__(self, agent_id: str = "ceo_mimi_001"):
+    def __init__(self, agent_id: str = "/home/user/os-engine-source/ceo_mimi_001"):
         capabilities = [
             AgentCapability(name="strategic_guidance", description="Provide strategic guidance and make decisions."),
             AgentCapability(name="cross_functional_coordination", description="Coordinate everything across the digital empire."),
