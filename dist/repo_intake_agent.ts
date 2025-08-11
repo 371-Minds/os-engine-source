@@ -29,6 +29,11 @@ export class RepoIntakeAgent {
         throw new Error('Method _analyze_repository not yet implemented');
     }
 
+    _get_structured_yaml(repo_url: any): any {
+        // TODO: Implement _get_structured_yaml logic
+        throw new Error('Method _get_structured_yaml not yet implemented');
+    }
+
     _is_binary(file_path: any): any {
         // TODO: Implement _is_binary logic
         throw new Error('Method _is_binary not yet implemented');
