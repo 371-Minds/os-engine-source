@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 venv/
+improved_base_agent.py
 
 # Node
 node_modules/
