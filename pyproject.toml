@@ -1,0 +1,294 @@
+pyproject_toml_content = '''[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "minds371"
+version = "0.1.0"
+description = "371 Minds Operating System - A modular business operating system for cross-platform deployment"
+authors = [
+    {name = "Antonio Bedford", email = "adynamics371@gmail.com"},
+]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+keywords = ["ai", "agents", "automation", "business-os", "platform-agnostic"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+# Core dependencies
+dependencies = [
+    "asyncio-mqtt>=0.16.0",
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.5.0",
+    "sqlalchemy>=2.0.0",
+    "redis>=5.0.0",
+    "psutil>=5.9.0",
+    "httpx>=0.25.0",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0.0",
+    "structlog>=23.2.0",
+    "tenacity>=8.2.0",
+    "prometheus-client>=0.19.0",
+    "opentelemetry-api>=1.21.0",
+    "opentelemetry-sdk>=1.21.0",
+]
+
+# Optional dependencies for different platforms and features
+[project.optional-dependencies]
+# Development dependencies
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.7.0",
+    "pre-commit>=3.5.0",
+    "sphinx>=7.2.0",
+    "sphinx-rtd-theme>=1.3.0",
+]
+
+# Performance and monitoring
+monitoring = [
+    "datadog>=0.47.0",
+    "sentry-sdk[fastapi]>=1.38.0",
+    "grafana-client>=3.5.0",
+    "elasticsearch>=8.11.0",
+]
+
+# Database support
+databases = [
+    "asyncpg>=0.29.0",        # PostgreSQL
+    "aiomysql>=0.2.0",        # MySQL
+    "motor>=3.3.0",           # MongoDB
+    "redis[hiredis]>=5.0.0",  # Redis with performance boost
+    "qdrant-client>=1.7.0",   # Vector database
+]
+
+# Cloud providers
+cloud = [
+    "boto3>=1.34.0",          # AWS
+    "google-cloud-core>=2.4.0", # GCP
+    "digitalocean>=1.17.0",   # DigitalOcean
+    "azure-identity>=1.15.0", # Azure
+]
+
+# Platform integrations
+platforms = [
+    "slack-sdk>=3.26.0",      # Slack bot
+    "discord.py>=2.3.0",      # Discord bot
+    "websockets>=12.0",       # WebSocket support
+    "selenium>=4.15.0",       # Browser automation
+]
+
+# LLM integrations
+llm = [
+    "openai>=1.3.0",          # OpenAI API
+    "anthropic>=0.7.0",       # Anthropic Claude
+    "langchain>=0.0.350",     # LangChain framework
+    "tiktoken>=0.5.0",        # Token counting
+]
+
+# All optional dependencies
+all = [
+    "minds371[dev,monitoring,databases,cloud,platforms,llm]"
+]
+
+[project.urls]
+Homepage = "https://github.com/adynamics371/371-os"
+Documentation = "https://371-os.readthedocs.io/"
+Repository = "https://github.com/adynamics371/371-os"
+Issues = "https://github.com/adynamics371/371-os/issues"
+Changelog = "https://github.com/adynamics371/371-os/blob/main/CHANGELOG.md"
+
+[project.scripts]
+minds371 = "minds371.cli:main"
+minds371-server = "minds371.platforms.api_server.fastapi_app:main"
+minds371-benchmark = "minds371.utils.benchmark:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+minds371 = ["configs/*.yaml", "configs/**/*.yaml", "configs/**/*.json"]
+
+# Black configuration
+[tool.black]
+line-length = 88
+target-version = ['py311']
+include = '\\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \\.eggs
+  | \\.git
+  | \\.hg
+  | \\.mypy_cache
+  | \\.tox
+  | \\.venv
+  | build
+  | dist
+)/
+'''
+
+# Ruff configuration (replaces flake8, isort, etc.)
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "ARG", # flake8-unused-arguments
+    "SIM", # flake8-simplify
+    "TCH", # flake8-type-checking
+    "PTH", # flake8-use-pathlib
+    "ERA", # eradicate
+    "PL",  # pylint
+    "RUF", # ruff-specific rules
+]
+ignore = [
+    "E501",   # line too long, handled by black
+    "B008",   # do not perform function calls in argument defaults
+    "C901",   # too complex
+    "PLR0913", # too many arguments
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/**/*" = ["PLR2004", "S101", "TID252"]
+
+[tool.ruff.isort]
+known-first-party = ["minds371"]
+
+# MyPy configuration
+[tool.mypy]
+python_version = "3.11"
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "redis.*",
+    "psutil.*",
+    "prometheus_client.*",
+]
+ignore_missing_imports = true
+
+# Pytest configuration
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "performance: marks tests as performance tests",
+    "unit: marks tests as unit tests",
+]
+asyncio_mode = "auto"
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/conftest.py",
+    "*/migrations/*",
+    "*/venv/*",
+    "*/.venv/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+'''
+
+print("📄 PYPROJECT.TOML CONFIGURATION")
+print("=" * 60)
+print("Created comprehensive pyproject.toml with:")
+print("\n🎯 CORE FEATURES:")
+features = [
+    "✅ Modern Python packaging standards (PEP 621)",
+    "✅ Comprehensive dependency management with optional extras", 
+    "✅ Development tools configuration (black, ruff, mypy, pytest)",
+    "✅ Platform-specific optional dependencies",
+    "✅ LLM integration dependencies",
+    "✅ Cloud provider integrations",
+    "✅ Performance monitoring tools",
+    "✅ Command-line scripts for easy usage"
+]
+
+for feature in features:
+    print(feature)
+
+print("\n📦 OPTIONAL DEPENDENCY GROUPS:")
+groups = [
+    "• dev: Development and testing tools",
+    "• monitoring: DataDog, Sentry, Grafana, Elasticsearch", 
+    "• databases: PostgreSQL, MySQL, MongoDB, Redis, Qdrant",
+    "• cloud: AWS, GCP, DigitalOcean, Azure",
+    "• platforms: Slack, Discord, WebSockets, Selenium",
+    "• llm: OpenAI, Anthropic, LangChain, Tiktoken",
+    "• all: Everything included for complete installation"
+]
+
+for group in groups:
+    print(group)
+
+print("\n🛠️ INSTALLATION COMMANDS:")
+commands = [
+    "# Basic installation",
+    "pip install minds371",
+    "",
+    "# Development installation", 
+    "pip install minds371[dev]",
+    "",
+    "# Full installation with all features",
+    "pip install minds371[all]",
+    "",
+    "# Custom installation",
+    "pip install minds371[llm,cloud,monitoring]"
+]
+
+for command in commands:
+    print(command)
+
+print(f"\n📏 Configuration includes {len(pyproject_toml_content.splitlines())} lines of comprehensive setup")
